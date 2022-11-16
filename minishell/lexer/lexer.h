@@ -6,6 +6,7 @@
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
 #include <fcntl.h>
 
 
@@ -35,10 +36,8 @@ struct s_token
     t_token *next;
 };
 
-char    *ft_strjoin(char *s1, char *s2);
-char    *get_char_as_string(char c);
-int     ft_strlen(char *s);
-void    ft_free(char *str);
+
+void	add_herdoc(t_lexer *lexer, t_token **token, int *flag);
 t_token	*init_token(int type, char *s, int *flag);
 void    add_token_back(t_token **head,t_token *new);
 void    quotes(t_token *head);
@@ -61,6 +60,15 @@ char	*single_quote(t_lexer *lexer);
 char	*double_quote(t_lexer *lexer, char **envp);
 char	*collect_string_check_dollar(t_lexer *lexer, char **envp);
 char	*expand_dollar(t_lexer *lexer, char **envp);
-void	syntax(t_token *token);
+int		syntax(t_token *token);
 void	error_msg(char *msg, char *token);
+void	ft_skip_whitespaces(t_lexer *lexer);
+void	lexer_advance(t_lexer *lexer);
+int		special_characters(char c);
+int		red_or_pipe(char c);
+t_lexer	*init_lexer(char *line);
+void	ft_free(char *s);
+char    *get_env(char *str, char **envp);
+
+
 #endif

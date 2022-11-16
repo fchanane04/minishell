@@ -1,15 +1,19 @@
-#include "lexer/lexer.h"
-#include "minishell.h"
+#include "../lexer/lexer.h"
+#include "../minishell.h"
 
 void print_tokens(t_token *token)
 {
-    // if (token == NULL)
-    //     printf("yes\n");
+    if (token->value == NULL)
+	{
+        printf("token value == NULL\n");
+		return;
+	}
     while (token != NULL)
     {
         printf("token == (%d,%s,%d)\n", token->type, token->value, token->index);
         token = token->next;
     }
+
 }
 
 void	print_tab(t_token **tab)
@@ -42,26 +46,21 @@ void	print_struct(t_parser *cmd_table)
 	int	i;
 
 	i = 0;
-	// printf("asdfghjk\n");
-	// if (cmd_table == NULL)
-	// 	printf("cmd table == NULL\n");
 	while (cmd_table != NULL)
 	{
-		printf("--------outfiles-------\n\n");
+		printf("\033[1;31m--------outfiles-------\n\n");
 		print_data(cmd_table->out_files, "outfiles");
-		printf("--------infiles--------\n\n");
+		printf("\033[1;31m--------infiles--------\n\n");
 		print_data(cmd_table->in_files, "infiles");
-		printf("--------heredoc---------\n\n");
-		print_data(cmd_table->heredoc, "heredoc");
-		printf("--------append---------\n\n");
+		printf("\033[1;32m--------herdoc---------\n\n");
+		print_data(cmd_table->heredoc, "herdoc");
+		printf("\033[1;32m--------append---------\n\n");
 		print_data(cmd_table->append, "append");
-		printf("--------cmd------------\n\n");
+		printf("\033[1;35m--------cmd------------\n\n");
 		printf("cmd == %s\n", cmd_table->cmd);
-		printf("--------args-----------\n\n");
+		printf("\033[1;35m--------args-----------\n\n");
 		print_data(cmd_table->args, "args");
-		printf("========next===========\n\n");
+		printf("\033[1;37m=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=next=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=\n\n");
 		cmd_table = cmd_table->next;
 	}
-// 	if (cmd_table->out_files == NULL)
-// 		printf("yes\n");
 }

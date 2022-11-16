@@ -1,5 +1,5 @@
-#include "minishell.h"
-#include "lexer/lexer.h"
+#include "../minishell.h"
+#include "../lexer/lexer.h"
 
 int	get_size_of_tab(t_token *token)
 {
@@ -28,7 +28,11 @@ t_token	*init_tab(int type, char *s)
         exit(EXIT_FAILURE);
     token->type = type;
 	token->index = 0;
-    token->value = strdup(s);
+	if (s != NULL)
+    	token->value = strdup(s);
+	else
+		token->value = NULL;
+	
     token->next = NULL;
     return(token);
 }

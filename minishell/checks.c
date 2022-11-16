@@ -6,7 +6,7 @@
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:14:04 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/16 00:04:37 by fchanane         ###   ########.fr       */
+/*   Updated: 2022/11/15 23:07:54 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,11 @@ int	fork_check(t_parser *prog)
 		check++;
 		tmp = tmp->next;
 	}
+	printf("not here\n");
 	if (check == 1)
 	{
-		if (!prog->args)
-			check = 1;
-		else
-			if (builtin_check(prog->args[0]))
-				check = 0;
+		if (builtin_check(prog->args[0]))
+			check = 0;
 	}
 	return (check);
 }

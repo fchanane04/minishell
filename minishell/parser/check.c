@@ -1,6 +1,6 @@
-#include "lexer/lexer.h"
+#include "../lexer/lexer.h"
 
-int	skip(char *line, char c)
+int	skip_quotes(char *line, char c)
 {
 	int i;
 
@@ -26,9 +26,9 @@ void	check_quotes(char *line)
 		if (line[i] == '"' || line[i] == '\'')
 		{
 			if (line[i] == '"')
-				i = skip(&line[i + 1], '"') + i + 1;
+				i = skip_quotes(&line[i + 1], '"') + i + 1;
 			else if (line[i] == '\'')
-				i = skip(&line[i + 1], '\'') + i + 1;
+				i = skip_quotes(&line[i + 1], '\'') + i + 1;
 		}
 		else
 			i++;

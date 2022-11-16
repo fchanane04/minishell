@@ -1,6 +1,6 @@
 NAME = minishell
 
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra #-fsanitize=address -g
 
 CC = gcc
 
@@ -11,12 +11,16 @@ SRC = \
 		lexer/lexer_utils.c\
 		lexer/token.c\
 		lexer/handle_quotes.c\
-		check.c\
+		lexer/add_herdoc.c\
+		lexer/expand.c\
+		parser/check.c\
 		main.c\
-		syntax_error.c\
-		print.c\
-		split_cmds.c\
-		last_parsing.c\
+		parser/syntax_error.c\
+		parser/print.c\
+		parser/split_cmds.c\
+		parser/parsing.c\
+		parser/parsing_utils.c\
+		parser/libft_functions.c\
 		heredoc.c\
 		libft.c\
 		checks.c\

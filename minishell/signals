@@ -31,3 +31,8 @@
 // 		free(line);
 // 	}
 // }
+
+// heredoc_check(cmd_table);
+// if (!fork_check(cmd_table))
+// 	exec_builtin(cmd_table, &var->envc);
+//print_struct(cmd_table);

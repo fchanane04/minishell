@@ -26,6 +26,15 @@
 typedef struct  s_parser t_parser;
 
 
+typedef struct  s_index
+{
+	int	outfile;
+	int	infile;
+	int	heredoc;
+	int	append;
+	int	args;
+}t_index;
+
 struct s_parser
 {
 	char	*cmd;
@@ -70,6 +79,11 @@ int			get_size_of_tab(t_token *token);
 void		print_struct(t_parser *cmd_table);
 void		syntax_error(t_token **line);
 t_parser	*parse_cmd(t_token **tab);
+char		*ft_strjoin(char *s1, char *s2);
+int			ft_strlen(char *s);
+char		*get_char_as_string(char c);
+char		*ft_strjoin(char *s1, char *s2);
+int			ft_isalnum(int c);
 
 void	heredoc_check(t_parser *prog);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -95,6 +109,10 @@ void	print_with_quotes(char *str, int fd);
 t_env	*new_node(char *line);
 void	add_env_node(t_env **env, t_env *node);
 int		printable(char *line);
-
+void	assign_null(t_parser *cmd_table, t_index *index);
+void	init_index(t_index *index);
+void	init_file(t_token *tab, char **file, int *i);
+int		get_size_of_words(t_token *tab);
+int		get_size_of_files(t_token *tab, int type);
 
 #endif
