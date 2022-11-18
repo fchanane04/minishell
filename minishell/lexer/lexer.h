@@ -69,6 +69,8 @@ int		red_or_pipe(char c);
 t_lexer	*init_lexer(char *line);
 void	ft_free(char *s);
 char    *get_env(char *str, char **envp);
-
+char	*dollar(t_lexer *lexer, char **envp);
+char	*ft_itoa(int n);
+void	skip(t_lexer *lexer, char c);
 
 #endif

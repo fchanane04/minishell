@@ -14,6 +14,8 @@ SRC = \
 		lexer/add_herdoc.c\
 		lexer/expand.c\
 		parser/check.c\
+		lexer/expand_utils.c\
+		lexer/ft_itoa.c\
 		main.c\
 		parser/syntax_error.c\
 		parser/print.c\
@@ -21,6 +23,7 @@ SRC = \
 		parser/parsing.c\
 		parser/parsing_utils.c\
 		parser/libft_functions.c\
+		parser/ft_free.c\
 		heredoc.c\
 		libft.c\
 		checks.c\

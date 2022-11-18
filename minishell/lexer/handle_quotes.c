@@ -12,6 +12,7 @@ char	*collect_string(t_lexer *lexer)
 	{
 		s = get_char_as_string(lexer->c);
         str = ft_strjoin(str, s);
+		free(s);
         lexer_advance(lexer);
 	}
 	return(str);
@@ -34,6 +35,7 @@ char	*collect_string_check_dollar(t_lexer *lexer, char **envp)
 			s = get_char_as_string(lexer->c);
 		
         str = ft_strjoin(str, s);
+		ft_free(s);
         lexer_advance(lexer);
 	}
 	return(str);
@@ -42,10 +44,8 @@ char	*collect_string_check_dollar(t_lexer *lexer, char **envp)
 char	*single_quote(t_lexer *lexer)
 {
 	char	*str;
-	char	*s;
 
 	str = NULL;
-	s = get_char_as_string(lexer->c);
 	lexer_advance(lexer);
 	if (lexer->c != '\'' )
 		str = collect_string(lexer);

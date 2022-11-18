@@ -15,6 +15,7 @@ char	*get_string_inside_quotes(t_lexer *lexer)
 	{
 		s = get_char_as_string(lexer->c);
 		str = ft_strjoin(str, s);
+		ft_free(s);
 		lexer_advance(lexer);
 	}
 	lexer_advance(lexer);
@@ -65,11 +66,11 @@ void	add_herdoc(t_lexer *lexer, t_token **token, int *flag)
 		else
 			s = get_string(lexer);
 		if(s != NULL)
+		{
 			str = ft_strjoin(str, s);
+			ft_free(s);
+		}
 	}
 	if (str != NULL)
-	{
 		add_token_back(token, init_token(WORD, str, flag));
-		// ft_free(str);
-	}
 }

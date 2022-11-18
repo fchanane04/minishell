@@ -84,6 +84,10 @@ int			ft_strlen(char *s);
 char		*get_char_as_string(char c);
 char		*ft_strjoin(char *s1, char *s2);
 int			ft_isalnum(int c);
+void		free_lexer(t_lexer *lexer);
+void		ft_free_cmd_table(t_parser *cmd_table);
+void		ft_free_tab(t_token **tab);
+void		ft_free_tokens(t_token *token);
 
 void	heredoc_check(t_parser *prog);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);

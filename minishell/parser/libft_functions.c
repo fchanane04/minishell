@@ -40,13 +40,8 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	if (!s2)
-		return(NULL);
 	if (!s1)
-	{
-		a = strdup(s2);
-		return (a);
-	}
+		return (strdup(s2));
 	a = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (a == NULL)
 		return (0);

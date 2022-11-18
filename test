@@ -1,0 +1,4 @@
+tab 
+echo hello >*file ==>expected outpout : bash: *file: ambiguous redirect
+echo hello (with spaces after hello) ==> print tokens
+lexer_advance protect if (lexer->c != '\0')

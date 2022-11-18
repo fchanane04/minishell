@@ -50,13 +50,13 @@ char	*whithout_expand(t_lexer *lexer)
 
 	s = NULL;
 	str = NULL;
-	s = get_dollar(check_dollar(lexer), lexer);
-	str = ft_strjoin(str, s);
+	str = get_dollar(check_dollar(lexer), lexer);
 	skip(lexer, '$');
 	while (special_characters(lexer->c) != 1 && ft_isalnum(lexer->c))
 	{
 		s = get_char_as_string(lexer->c);
 		str = ft_strjoin(str, s);
+		free(s);
 		lexer_advance(lexer);
 	}
 	return(str);
@@ -67,24 +67,27 @@ char	*expand_dollar(t_lexer *lexer, char **envp)
 	char	*s;
 	char	*str;
 	char	*expand;
+
 	s = NULL;
 	str = NULL;
 	if (check_dollar(lexer) % 2 == 0)
 		return(whithout_expand(lexer));
 	if (check_dollar(lexer) != 1)
 		return(get_dollar(check_dollar(lexer) - 1, lexer));
-	lexer_advance(lexer);//skip dollar
+	lexer_advance(lexer);//skip dollar;
 	if (lexer->c == ' ' || lexer->c == '\0')
 		return(get_char_as_string('$'));
 	while (special_characters(lexer->c) != 1 && ft_isalnum(lexer->c))
 	{
 		s = get_char_as_string(lexer->c);
 		str = ft_strjoin(str, s);
+		ft_free(s);
 		lexer_advance(lexer);
 	}
 	if (lexer->c == '_')
-	{ 
-		skip(lexer, '_');//free here str and s
+	{
+		free(str);
+		skip(lexer, '_');
 		return(NULL);
 	}
 	expand = get_env(str, envp);
