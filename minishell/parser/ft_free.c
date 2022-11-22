@@ -3,12 +3,15 @@
 
 void	ft_free_tokens(t_token *token)
 {
+	t_token *tmp;
+
+	tmp = token;
 	while (token != NULL)
 	{
-		free(token->value);
-		token->value = NULL;
-		free(token);
+		tmp = token;
 		token = token->next;
+		free(tmp->value);
+		free(tmp);
 	}
 }
 
@@ -37,22 +40,18 @@ void	free_tab(char **tab)
 
 void	ft_free_cmd_table(t_parser *cmd_table)
 {
+	t_parser *tmp;
+
+	tmp = cmd_table;
 	while (cmd_table != NULL)
 	{
-		if (cmd_table->cmd != NULL)
-			free(cmd_table->cmd);
-		if (cmd_table->append != NULL)
-			free_tab(cmd_table->append);
-		if (cmd_table->heredoc != NULL)
-			free_tab(cmd_table->heredoc);
-		if (cmd_table->in_files != NULL)
-			free_tab(cmd_table->in_files);
-		if (cmd_table->out_files != NULL)
-			free_tab(cmd_table->out_files);
-		if (cmd_table->args != NULL)
-			free_tab(cmd_table->args);
-		free(cmd_table);
+		tmp = cmd_table;
 		cmd_table = cmd_table->next;
+		if (tmp->heredoc != NULL)
+			free_tab(tmp->heredoc);
+		if (tmp->args != NULL)
+			free_tab(tmp->args);
+		free(tmp);
 	}
 }
 

@@ -16,6 +16,8 @@ SRC = \
 		parser/check.c\
 		lexer/expand_utils.c\
 		lexer/ft_itoa.c\
+		lexer/split_expand.c\
+		lexer/ft_split.c\
 		main.c\
 		parser/syntax_error.c\
 		parser/print.c\
@@ -24,17 +26,17 @@ SRC = \
 		parser/parsing_utils.c\
 		parser/libft_functions.c\
 		parser/ft_free.c\
-		heredoc.c\
-		libft.c\
-		checks.c\
-		builtins/cd.c\
-		builtins/echo.c\
-		builtins/pwd.c\
-		builtins/env.c\
-		builtins/unset.c\
-		builtins/export.c\
-		builtins/builtins.c\
-		env_management.c\
+		# env_management.c\
+		# heredoc.c\
+		# libft.c\
+		# checks.c\
+		# builtins/cd.c\
+		# builtins/echo.c\
+		# builtins/pwd.c\
+		# builtins/env.c\
+		# builtins/unset.c\
+		# builtins/export.c\
+		# builtins/builtins.c\
 		
 
 OBJ = $(SRC:.c=.o)

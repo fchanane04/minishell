@@ -44,8 +44,8 @@ void	add_herdoc_as_token(t_token **token, int *flag)
 	char	*s;
 
 	s = NULL;
-	s = ft_strdup("<<");
-	add_token_back(token, init_token(DEL, s, flag));
+	s = strdup("<<");
+	add_token_back(token, init_token(DEL, s, flag, -1));
 }
 
 void	add_herdoc(t_lexer *lexer, t_token **token, int *flag)
@@ -59,6 +59,8 @@ void	add_herdoc(t_lexer *lexer, t_token **token, int *flag)
 	lexer_advance(lexer);
 	ft_skip_whitespaces(lexer);
 	add_herdoc_as_token(token, flag);
+	if (lexer->c == '$' && lexer->line[lexer->i + 1] == '"')
+		lexer_advance(lexer);//$"HOME" ==> HOME 
 	while (lexer->c != ' ' && lexer->c != '\0' && red_or_pipe(lexer->c) != 1)
 	{
 		if (lexer->c == '\'' || lexer->c == '"')
@@ -72,5 +74,5 @@ void	add_herdoc(t_lexer *lexer, t_token **token, int *flag)
 		}
 	}
 	if (str != NULL)
-		add_token_back(token, init_token(WORD, str, flag));
+		add_token_back(token, init_token(WORD, str, flag, -1));
 }

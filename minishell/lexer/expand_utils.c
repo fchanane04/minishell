@@ -23,22 +23,23 @@ void	skip_alnum(t_lexer *lexer)
 		lexer_advance(lexer);
 }
 
-char	*dollar(t_lexer *lexer, char **envp)
+char	*dollar(t_lexer *lexer, t_token **token, int *flag)
 {
 	char	*s;
 	char	c;
 
 	s = NULL;
 	c = lexer->line[lexer->i + 1];
+
 	if (ft_is_digit(c) == 1)
 	{
 		lexer_advance(lexer);
 		lexer_advance(lexer);//skip first digit(echo $234HOME ==> 234HOME)
 		if (c == '0')
 			return(strdup("minishell"));//print shell name (echo $0)
-		return(NULL);
+		return (NULL);
 	}
-	else if (lexer->c == '$' && ft_isalnum(c) != 1)
+	else if (lexer->c == '$' && ft_isalnum(c) != 1  && c != '$')//whitout expand
 	{
 		lexer_advance(lexer);//skip '$'
 		if (lexer->c == '?')
@@ -47,17 +48,16 @@ char	*dollar(t_lexer *lexer, char **envp)
 		{
 			skip(lexer, '_');
 			skip_alnum(lexer);
-			return(NULL);
+			return (NULL);
 		}
 		return(get_char_as_string('$'));
 	}
 	else if (lexer->c == '$' && (lexer->line[lexer->i + 1] == '"' || lexer->line[lexer->i + 1] == '\''))
 	{
 		lexer_advance(lexer);
-		return(NULL);
+		return (NULL);
 	}
 	else if (lexer->c == '$' && red_or_pipe(lexer->line[lexer->i + 1]) != 1)
-		return(expand_dollar(lexer, envp));
-	
-	return(NULL);
+		return (expand_dollar(lexer, token, flag));
+	return (NULL); 
 }

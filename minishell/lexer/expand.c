@@ -1,7 +1,6 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-
 void	skip(t_lexer *lexer, char c)
 {
 	while (lexer->c == c)
@@ -62,7 +61,7 @@ char	*whithout_expand(t_lexer *lexer)
 	return(str);
 }
 
-char	*expand_dollar(t_lexer *lexer, char **envp)
+char	*expand_dollar(t_lexer *lexer, t_token **token, int *flag)
 {
 	char	*s;
 	char	*str;
@@ -70,6 +69,7 @@ char	*expand_dollar(t_lexer *lexer, char **envp)
 
 	s = NULL;
 	str = NULL;
+	expand = NULL;
 	if (check_dollar(lexer) % 2 == 0)
 		return(whithout_expand(lexer));
 	if (check_dollar(lexer) != 1)
@@ -88,9 +88,12 @@ char	*expand_dollar(t_lexer *lexer, char **envp)
 	{
 		free(str);
 		skip(lexer, '_');
-		return(NULL);
+		return (NULL);
 	}
-	expand = get_env(str, envp);
+	expand = get_env(str);
+	if (is_space(expand) == 0)
+		return(handle_spaces(expand, token, flag));
 	return(expand);
 }
 
+  

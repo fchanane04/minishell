@@ -1,27 +1,32 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-char    *get_env(char *str, char **envp)
+char    *get_env(char *str)
 {
     int		i;
     char	*s;
+	
 
     i = 0;
-    while(envp[i] != NULL)
-    {
-        if (strncmp(envp[i], str, ft_strlen(str)) == 0 && envp[i][ft_strlen(str)] == '=')
-        {
-            s = strdup(envp[i] + ft_strlen(str) + 1);
+	s = NULL;
+	t_env *tmp;
+
+	tmp = var->envc;
+	while (tmp != NULL)
+	{
+		if (strncmp(tmp->line, str, ft_strlen(str)) == 0 && tmp->line[ft_strlen(str)] == '=')
+		{
+			s = strdup(tmp->line + ft_strlen(str) + 1);
 			ft_free(str);
-            return(s);
-        }
-        i++;
-    }
+			return (s);
+		}
+		tmp = tmp->next;
+	}
 	ft_free(str);
 	return(NULL);
 }
 
-t_token *init_token(int type, char *s, int *flag)
+t_token *init_token(int type, char *s, int *flag, int expand)
 {
     t_token *token;
     static int i;
@@ -34,6 +39,9 @@ t_token *init_token(int type, char *s, int *flag)
     token = malloc(sizeof(t_token));
     if (!token)
         exit(EXIT_FAILURE);
+	token->expand = 0;
+	if (expand == 1)
+		token->expand = 1;
     token->type = type;
 	if (s != NULL)
     	token->value = strdup(s);

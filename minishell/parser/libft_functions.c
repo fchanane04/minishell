@@ -6,7 +6,7 @@ void    ft_free(char *str)
 	if (str != NULL)
 	{
     	free(str);
-    	str = NULL;
+    	str = NULL;//ma3nd rbha hta ma3na 
 	}
 }
 
@@ -24,6 +24,7 @@ char	*get_char_as_string(char c)
 {
     char *s;
 
+	s = NULL;
     s = malloc(sizeof(char) * 2);
     if (!s)
         exit(EXIT_FAILURE);
@@ -40,7 +41,7 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	if (!s1)
+	if (s1 == NULL && s2 != NULL)
 		return (strdup(s2));
 	a = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (a == NULL)

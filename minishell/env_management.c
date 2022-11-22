@@ -63,7 +63,7 @@ char *get_envc(t_env *env, char *var)
 	tmp = env;
 	while (tmp)
 	{
-		if (!ft_strncmp(var , tmp->line, ft_strlen(var)))
+		if (!strncmp(var , tmp->line, ft_strlen(var)))
 		{
 			start = ft_strlen(var) + 1;
 			len = ft_strlen(tmp->line) - start;

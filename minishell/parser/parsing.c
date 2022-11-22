@@ -1,38 +1,93 @@
 #include "../lexer/lexer.h"
 #include "../minishell.h"
 
-void	fill_cmd(t_token *tab, t_parser *cmd_table)
+void	fill_args_herdoc(t_token *tab, t_parser *cmd_table, t_index *index)
 {
-	t_index	*index;
 	int		type;
+	t_token	*tmp;
 
-	index = malloc(sizeof(t_index));
-	if (!index)
-		exit(EXIT_FAILURE);
-	init_index(index);
-	while (tab != NULL)
+	tmp = tab;
+	while (tmp != NULL)
 	{
-		type = tab->type;
-		if (type == R_RED || type == L_RED || type == DEL || type == APP)
-			tab = tab->next;
-		if (type == R_RED)
-			init_file(tab, cmd_table->out_files, &index->outfile);
-		else if (type == L_RED)
-			init_file(tab, cmd_table->in_files, &index->infile);
-		else if (type == DEL)
-			init_file(tab, cmd_table->heredoc, &index->heredoc);
-		else if (type == APP)
-			init_file(tab, cmd_table->append, &index->append);
+		type = tmp->type;
+		if (type == DEL)
+		{
+			tmp = tmp->next;
+			init_args_heredoc(tmp, cmd_table->heredoc, &index->heredoc);
+		}
+		else if (type == R_RED || type == L_RED || type == APP)
+			tmp = tmp->next;
 		else if (type == WORD)
-			init_file(tab, cmd_table->args, &index->args);
-		tab = tab->next;
+			init_args_heredoc(tmp, cmd_table->args, &index->args);
+		tmp = tmp->next;
 	}
-	if (cmd_table->args != NULL && cmd_table->args[0] != NULL)
-		cmd_table->cmd = strdup(cmd_table->args[0]);
-	else
-		cmd_table->cmd = NULL;
-	assign_null(cmd_table, index);
-	free(index);
+}
+
+int	file_type(int type)
+{
+	if (type == R_RED)
+		return(OUT);
+	else if (type == L_RED)
+		return(IN);
+	else if (type == APP)
+		return(AP);
+	return(0);
+}
+
+t_files *init_file(t_token *tab, int type)
+{
+	t_files *file;
+
+	file = malloc(sizeof(t_files));
+	if (!file)
+		return(NULL);
+	file->type = file_type(type);
+	file->filename = strdup(tab->value);
+	file->next = NULL;
+	return(file);
+}
+
+void	add_file_back(t_files **files, t_files *new)
+{
+	t_files *tmp;
+
+	if (!*files)
+	{
+		*files = new;
+		return ;
+	}
+	tmp = *files;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
+	t_files *fil;
+	fil = *files;
+	while (fil != NULL)
+	{
+		printf("filename fil == |%s|\n", fil->filename);
+		fil = fil->next;
+	}
+}
+
+t_files	*fill_files(t_token *tab)
+{
+	t_token	*tmp;
+	int		type;
+	t_files *files;
+
+	tmp = tab;
+	files = NULL;
+	while (tmp != NULL)
+	{
+		type = tmp->type;
+		if (type == R_RED || type == L_RED || type == APP)
+		{
+			tmp = tmp->next;
+			add_file_back(&files , init_file(tmp, type));
+		}
+		tmp = tmp->next;
+	}
+	return(files);
 }
 
 char	**ft_allocate(int size)
@@ -46,28 +101,30 @@ char	**ft_allocate(int size)
 		if (!s)
 			exit(EXIT_FAILURE);
 	}
-	return(s);
+	return (s);
 }
 
 t_parser *init_cmd_table(t_token *tab)
 {
 	t_parser	*cmd_table;
+	t_index		*index;
 	int			size;
 
 	cmd_table = malloc(sizeof(t_parser));
 	if (!cmd_table)
 		exit(EXIT_FAILURE);
-	size  = get_size_of_files(tab, R_RED);
-	cmd_table->out_files = ft_allocate(size);
-	size = get_size_of_files(tab, L_RED);
-	cmd_table->in_files = ft_allocate(size);
+	index = malloc(sizeof(t_index));
+	if (!index)
+		exit(EXIT_FAILURE);
+	init_index(index);
 	size = get_size_of_words(tab);
 	cmd_table->args = ft_allocate(size);
 	size = get_size_of_files(tab, DEL);
 	cmd_table->heredoc = ft_allocate(size);
-	size = get_size_of_files(tab, APP);
-	cmd_table->append = ft_allocate(size);
-	fill_cmd(tab, cmd_table);
+	fill_args_herdoc(tab, cmd_table, index);
+	cmd_table->files = fill_files(tab);
+	assign_null(cmd_table, index);
+	free(index);
 	return(cmd_table);
 }
 

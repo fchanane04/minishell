@@ -18,7 +18,7 @@ char	*collect_string(t_lexer *lexer)
 	return(str);
 }
 
-char	*collect_string_check_dollar(t_lexer *lexer, char **envp)
+char	*collect_string_check_dollar(t_lexer *lexer, t_token **token, int *flag)
 {
 	char	*s;
 	char	*s1;
@@ -30,11 +30,13 @@ char	*collect_string_check_dollar(t_lexer *lexer, char **envp)
 	while (lexer->c != '"' && lexer->c != '\0')
 	{
 		if (lexer->c == '$')
-			s = expand_dollar(lexer, envp);
+			s = expand_dollar(lexer, token, flag);
 		else
 			s = get_char_as_string(lexer->c);
-		
-        str = ft_strjoin(str, s);
+		if (s == NULL)
+			str = NULL;
+		else
+        	str = ft_strjoin(str, s);
 		ft_free(s);
         lexer_advance(lexer);
 	}
@@ -53,24 +55,24 @@ char	*single_quote(t_lexer *lexer)
 	return(str);
 }
 
-char	*double_quote(t_lexer *lexer,char **envp)
+char	*double_quote(t_lexer *lexer, t_token **token, int *flag)
 {
 	char	*s;
 
 	s = NULL;
 	lexer_advance(lexer);//FIRST QUOTE
-	s = collect_string_check_dollar(lexer, envp);
+	s = collect_string_check_dollar(lexer, token, flag);
 	lexer_advance(lexer);//SECOND QUOTE
 	return(s);
 }
 
-char	*get_str_inside_quotes(t_lexer *lexer, char **envp)
+char	*get_str_inside_quotes(t_lexer *lexer, t_token **token, int *flag)
 {
 	char *s;
 
 	s = NULL;
 	if (lexer->c == '"')
-		s = double_quote(lexer, envp);
+		s = double_quote(lexer, token, flag);
     else if (lexer->c == '\'')
 		s = single_quote(lexer);
 	return(s);
