@@ -3,13 +3,29 @@
 
 t_global	*var;
 
+int	*exit_status_setter(int stat)
+{
+	static int var = 0x0;
+	var = stat;
+	return (&var);
+}
+
+void	free_all_struct(t_token *token, t_token **tab, t_parser *cmd_table)
+{
+	ft_free_tokens(token);
+	ft_free_tab(tab);
+	ft_free_cmd_table(cmd_table);
+}
+
 int	main(int ac, char **av, char **envp)
 {
-	char	*line;
-	t_lexer	*lexer;
-	t_token	*token;
-	t_token	**tab;
-	t_parser *cmd_table;
+	char		*line;
+	t_lexer		*lexer;
+	t_token		*token;
+	t_token		**tab;
+	t_parser	*cmd_table;
+	int		ret;
+	int		quotes;
 
 	if (ac != 1 && !envp)
 	{
@@ -19,6 +35,8 @@ int	main(int ac, char **av, char **envp)
 	token = NULL;
 	tab = NULL;
 	cmd_table = NULL;
+	ret = 0;
+	quotes = 0;
 	var = malloc(sizeof(t_global));
 	var->envc = clone_env(envp);// hadchi mazal khasso ithet f function ==> set_var(var) hta nsaybha
 	var->status = 0;
@@ -26,33 +44,38 @@ int	main(int ac, char **av, char **envp)
 	var->fd_in = 0;
 	while ((line = readline("minishell@minihell>$ ")) != NULL)
 	{
+		if (line == 0x0) // EOF
+		{
+			printf("\n");
+			break;
+		}
 		if (strcmp(line, "\0") != 0)
 		{
-			check_quotes(line);//don't exit
+			quotes = check_quotes(line);//don't exit
+			if (quotes == -1)
+			{
+				add_and_free_line(line);
+				continue;
+			}
 			lexer = init_lexer(line);
 			token = get_token(lexer);
-			if (syntax(token) != -1 && token != NULL)
+			print_tokens(token);
+			ret = syntax(token);
+			if (ret == -1)
+			{
+				add_and_free_line(line);
+				ft_free_tokens(token);
+				continue;
+			}
+			if (token != NULL)
 			{
 				tab = get_token_as_cmd(token);
-				//print_tab(tab);
 				cmd_table = parse_cmd(tab);
-				//print_struct(cmd_table);
-				heredoc_check(cmd_table);//matb9aych theydi lia functins ghir diri //
-				if (!fork_check(cmd_table))
-					exec_builtin(cmd_table, &var->envc);
-				else
-				{//hadchi rah ghir bach n testi ama rah mazal khass nzid function bach n3rf wach single ola multi cmd
-					var->fd_in = open_infile(cmd_table->files);
-					var->fd_out = open_outfile(cmd_table->files);//append fih chi error hnaya mli 9essemt lcode mab9aach khedam kif 9bl 
-					execute_single_cmd(cmd_table);
-				}
-				ft_free_tokens(token);
-				ft_free_tab(tab);
-				ft_free_cmd_table(cmd_table);
+				print_struct(cmd_table);
+				free_all_struct(token, tab, cmd_table);
 			}
 			free_lexer(lexer);
-			add_history(line);
-			free(line);
+			add_and_free_line(line);
 			// system("leaks minishell");
 		}
 	}

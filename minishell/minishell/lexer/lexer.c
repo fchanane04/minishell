@@ -75,7 +75,8 @@ void	add_word(t_lexer *lexer, t_token **token, int *flag)
 		if (s != NULL)
 		{
 			str = ft_strjoin(str, s);
-			ft_free(s);
+			free(s);
+			s = NULL;
 		}
 	}
 	if (str != NULL)

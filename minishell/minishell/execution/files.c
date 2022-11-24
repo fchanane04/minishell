@@ -46,7 +46,11 @@ int	open_outfile(t_files *files)
 			if (fd != 1)
 				close(fd);
 			if (tmp->type == OUT)
+			{
 				fd = open(tmp->filename, O_CREAT | O_WRONLY | O_TRUNC, 0777);
+				if (fd == -1)
+					return (-1);
+			}
 			if (tmp->type == APP)
 				fd = open(tmp->filename, O_CREAT | O_WRONLY | O_APPEND, 0777);
 		}

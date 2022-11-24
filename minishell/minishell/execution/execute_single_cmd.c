@@ -103,6 +103,25 @@ void	free_paths(char **paths)
 	free(paths);
 }
 #include <errno.h>
+ #include <sys/stat.h>
+void	is_a_directory(char *bin_path)
+{
+	struct stat	data;
+
+	if (stat(bin_path, &data) == -1)
+	{
+		strerror(errno);
+		write(2, "Bash : Command not found\n", sizeof("Bash : Command not found\n"));
+		exit(errno);
+	}
+	if (S_ISDIR(data.st_mode) == 1)
+	{
+		strerror(errno);
+		write(2, "bash : is a directory\n", sizeof("bash : is a directory\n"));
+		exit(errno);
+	}
+}
+
 void	execute_single_cmd(t_parser *prog)
 {
 	char	*path;
@@ -120,13 +139,17 @@ void	execute_single_cmd(t_parser *prog)
 		dup2(var->fd_in, 0);
 		dup2(var->fd_out, 1);
 		path = find_path(create_paths(var->envc), prog->args[0]);
+		is_a_directory(path);
+		/*
 		if (!path)
 		{
+			//var->status = 127;
 			write(2, "bash :command not found: ", 25);
 			ft_putstr_fd(prog->args[0], 2);
 			write(2, "\n", 2);
-			exit(1);
+			exit(*exit_status_setter(127));
 		}
+		*/
 		envv = duplicate(var->envc);
 		if (execve(path, prog->args, envv) <= -1)
 		{

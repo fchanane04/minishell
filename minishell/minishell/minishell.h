@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include<limits.h>
+#include <limits.h>
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -25,6 +25,9 @@
 #define ERROR_MSG "syntax error near unexpected token `"
 #define EXIT_ERR1 ": numeric argument required\n"
 #define EXIT_ERR2 "too many arguments\n"
+
+// LOL
+int	*exit_status_setter(int stat);
 
 typedef struct  s_parser t_parser;
 
@@ -77,7 +80,7 @@ char		*get_char_as_string(char c);
 int			ft_strlen(char *s);
 void		add_token_back(t_token **head,t_token *token);
 void		quotes(t_token *head);
-void		check_quotes(char *line);
+int			check_quotes(char *line);
 t_token		*init_tab(int type, char *s);
 void		delete_token(t_token **token);
 void		print_tab(t_token **tab);
@@ -101,6 +104,7 @@ void		init_args_heredoc(t_token *tab, char **s, int *i);
 int			get_size_of_words(t_token *tab);
 int			get_size_of_files(t_token *tab, int type);
 void		assign_null(t_parser *cmd_table, t_index *index);
+void		add_and_free_line(char *line);
 
 //*******************************************************************
 

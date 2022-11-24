@@ -75,8 +75,11 @@ char	*expand_dollar(t_lexer *lexer, t_token **token, int *flag)
 	if (check_dollar(lexer) != 1)
 		return(get_dollar(check_dollar(lexer) - 1, lexer));
 	lexer_advance(lexer);//skip dollar;
-	if (lexer->c == ' ' || lexer->c == '\0')
+	if (special_characters(lexer->c) == 1)//here
+	{
+		
 		return(get_char_as_string('$'));
+	}
 	while (special_characters(lexer->c) != 1 && ft_isalnum(lexer->c))
 	{
 		s = get_char_as_string(lexer->c);
@@ -95,5 +98,3 @@ char	*expand_dollar(t_lexer *lexer, t_token **token, int *flag)
 		return(handle_spaces(expand, token, flag));
 	return(expand);
 }
-
-  

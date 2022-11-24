@@ -38,9 +38,23 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
+void	free_files(t_files *files)
+{
+	t_files	*tmp;
+
+	tmp = files;
+	while (files != NULL)
+	{
+		tmp = files;
+		files = files->next;
+		free(tmp->filename);
+		free(tmp);
+	}
+}
+
 void	ft_free_cmd_table(t_parser *cmd_table)
 {
-	t_parser *tmp;
+	t_parser	*tmp;
 
 	tmp = cmd_table;
 	while (cmd_table != NULL)
@@ -51,6 +65,7 @@ void	ft_free_cmd_table(t_parser *cmd_table)
 			free_tab(tmp->heredoc);
 		if (tmp->args != NULL)
 			free_tab(tmp->args);
+		free_files(tmp->files);
 		free(tmp);
 	}
 }

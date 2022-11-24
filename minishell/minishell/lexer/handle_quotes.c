@@ -32,13 +32,16 @@ char	*collect_string_check_dollar(t_lexer *lexer, t_token **token, int *flag)
 		if (lexer->c == '$')
 			s = expand_dollar(lexer, token, flag);
 		else
+		{
 			s = get_char_as_string(lexer->c);
-		if (s == NULL)
-			str = NULL;
-		else
-        	str = ft_strjoin(str, s);
-		ft_free(s);
-        lexer_advance(lexer);
+			lexer_advance(lexer);
+		}
+        str = ft_strjoin(str, s);
+		if (s != NULL)
+		{
+			free(s);
+			s = NULL;
+		}
 	}
 	return(str);
 }

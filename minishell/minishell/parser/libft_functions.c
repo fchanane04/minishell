@@ -43,6 +43,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = 0;
 	if (s1 == NULL && s2 != NULL)
 		return (strdup(s2));
+	else if (s1 == NULL)
+		return(NULL);
 	a = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (a == NULL)
 		return (0);

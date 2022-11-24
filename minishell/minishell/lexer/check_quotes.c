@@ -1,37 +1,38 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-int	skip_quotes(char *line, char c)
+void	add_and_free_line(char *line)
 {
-	int i;
-
-	i = 0;
-	while (line[i] != c && line[i] != '\0')
-		i++;
-	if (line[i] == '\0')
-	{
-		printf("error quotes\n");
-		exit(EXIT_FAILURE);
-	}
-	i++;
-	return(i);
+	add_history(line);
+	free(line);
 }
 
-void	check_quotes(char *line)
+int		check_quotes(char *line)
 {
-	int	i;
+	int		i;
+	int		ret;
+	char	c;
 
 	i = 0;
+	ret = 0;
 	while (line[i])
 	{
 		if (line[i] == '"' || line[i] == '\'')
 		{
-			if (line[i] == '"')
-				i = skip_quotes(&line[i + 1], '"') + i + 1;
-			else if (line[i] == '\'')
-				i = skip_quotes(&line[i + 1], '\'') + i + 1;
+			c = line[i];
+			i++;
+			while (line[i] != c && line[i] != '\0')
+				i++;
+			if (line[i] == '\0')
+			{
+				printf("syntax error\n");
+				return (-1);
+			}
+			else if (line[i] == c)
+				i++;
 		}
 		else
 			i++;
 	}
+	return (0);
 }

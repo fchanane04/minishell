@@ -41,6 +41,7 @@ int	error(t_token *token)
 int	syntax(t_token *token)
 {
 	int	type;
+	
 	while (token != NULL)
 	{
 		type = token->type;

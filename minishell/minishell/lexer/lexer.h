@@ -41,7 +41,7 @@ struct s_token
 void	add_herdoc(t_lexer *lexer, t_token **token, int *flag);
 void    add_token_back(t_token **head,t_token *new);
 void    quotes(t_token *head);
-void	check_quotes(char *line);
+int		check_quotes(char *line);
 t_token *init_tab(int type, char *s);
 void	delete_token(t_token **token);
 void	print_tab(t_token **tab);

@@ -14,7 +14,7 @@ char *handle_status(t_lexer *lexer)
 	
 	s = NULL;
 	lexer_advance(lexer);
-	return(ft_itoa(var->status));
+	return(ft_itoa(*exit_status_setter(0x0)));
 }
 
 void	skip_alnum(t_lexer *lexer)

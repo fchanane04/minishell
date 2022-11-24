@@ -36,3 +36,32 @@
 // if (!fork_check(cmd_table))
 // 	exec_builtin(cmd_table, &var->envc);
 //print_struct(cmd_table);
+
+
+
+
+
+
+
+/*===================================================================================================*/
+
+// heredoc_check(cmd_table);//matb9aych theydi lia functins ghir diri //
+// if (!fork_check(cmd_table))
+// 	exec_builtin(cmd_table, &var->envc);
+// else
+// {//hadchi rah ghir bach n testi ama rah mazal khass nzid function bach n3rf wach single ola multi cmd
+// 	var->fd_in = open_infile(cmd_table->files);
+// 	if (var->fd_out == -1)
+// 	{
+// 		perror("Error ");
+// 		continue;
+// 	}
+// 	var->fd_out = open_outfile(cmd_table->files);//append fih chi error hnaya mli 9essemt lcode mab9aach khedam kif 9bl 
+// 	if (var->fd_out == -1)
+// 	{
+// 		perror("Error ");
+// 		continue;
+// 	}
+// 	execute_single_cmd(cmd_table);
+// }
+// free_all_struct(token, tab, cmd_table);
