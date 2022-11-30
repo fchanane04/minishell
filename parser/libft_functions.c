@@ -49,9 +49,16 @@ char	*ft_strjoin(char *s1, char *s2)
 	else if (s1 == NULL)
 		return (NULL);
 	a = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (a == NULL)
-		return (0);
-	join(a, s1, s2);
+	if (!a)
+		return (NULL);
+	while (s1[i] != '\0')
+		a[j++] = s1[i++];
+	i = 0;
+	while (s2[i])
+		a[j++] = s2[i++];
+	a[j] = '\0';
+	free(s1);
+	s1 = NULL;
 	return (a);
 }
 

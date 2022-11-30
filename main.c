@@ -54,13 +54,12 @@ int	main(int ac, char **av, char **envp)
 			quotes = check_quotes(line);
 			if (quotes == -1)
 			{
-				var->status = 0;
+				var->status = 258;
 				add_and_free_line(line);
 				continue;
 			}
 			lexer = init_lexer(line);
 			token = get_token(lexer);
-			print_tokens(token);
 			ret = syntax(token);
 			if (ret == -1)
 			{
@@ -73,28 +72,8 @@ int	main(int ac, char **av, char **envp)
 			if (token != NULL)
 			{
 				tab = get_token_as_cmd(token);
-				print_tab(tab);
 				cmd_table = parse_cmd(tab);
 				print_struct(cmd_table);
-				// heredoc_check(cmd_table);
-				// if (!fork_check(cmd_table))
-				// 	exec_builtin(cmd_table, &var->envc);
-				// else
-				// {
-				// 	var->fd_in = open_infile(cmd_table->files);
-				// 	if (var->fd_out == -1)
-				// 	{
-				// 		perror("Error ");
-				// 		continue;
-				// 	}
-				// 	var->fd_out = open_outfile(cmd_table->files);
-				// 	if (var->fd_out == -1)
-				// 	{
-				// 		perror("Error ");
-				// 		continue;
-				// 	}
-				// 	execute_single_cmd(cmd_table);
-				// }
 				free_all_struct(token, tab, cmd_table);
 			}
 			free_lexer(lexer);

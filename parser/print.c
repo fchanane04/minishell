@@ -27,7 +27,7 @@ void print_tokens(t_token *token)
 	}
     while (token != NULL)
     {
-        printf("token == (%d,|%s|,%d, %d)\n", token->type, token->value, token->index, token->expand);
+        printf("token == (%d, |%s|)\n", token->type, token->value);
         token = token->next;
     }
 
@@ -62,7 +62,7 @@ void	print_files(t_files *files)
 {
 	while (files != NULL)
 	{
-		printf("filename == %s, type == %d\n", files->filename, files->type);
+		printf("filename == |%s|, type == %d\n", files->filename, files->type);
 		files = files->next;
 	}
 }
@@ -74,7 +74,7 @@ void	print_struct(t_parser *cmd_table)
 	i = 0;
 	while (cmd_table != NULL)
 	{
-		printf("\033[1;35m--------args-----------\n\n");
+		printf("\033[1;36m--------args-----------\n\n");
 		print_data(cmd_table->args, "args");
 		printf("\033[1;35m--------files-------\n\n");
 		print_files(cmd_table->files);

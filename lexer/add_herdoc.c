@@ -54,13 +54,13 @@ char	*get_string(t_lexer *lexer)
 	return (str);
 }
 
-void	add_herdoc_as_token(t_token **token, int *flag)
+void	add_herdoc_as_token(t_token **token)
 {
 	char	*s;
 
 	s = NULL;
 	s = strdup("<<");
-	add_token_back(token, init_token(DEL, s, flag, -1));
+	add_token_back(token, init_token(DEL, s));
 }
 
 char	*get_heredoc_name(t_lexer *lexer)
@@ -87,7 +87,7 @@ char	*get_heredoc_name(t_lexer *lexer)
 	return (str);
 }
 
-void	add_herdoc(t_lexer *lexer, t_token **token, int *flag)
+void	add_herdoc(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 	char	*str;
@@ -97,10 +97,10 @@ void	add_herdoc(t_lexer *lexer, t_token **token, int *flag)
 	lexer_advance(lexer);
 	lexer_advance(lexer);
 	ft_skip_whitespaces(lexer);
-	add_herdoc_as_token(token, flag);
+	add_herdoc_as_token(token);
 	if (lexer->c == '$' && is_quote(lexer->line[lexer->i + 1]) == 0)
 		lexer_advance(lexer);
 	str = get_heredoc_name(lexer);
 	if (str != NULL)
-		add_token_back(token, init_token(WORD, str, flag, -1));
+		add_token_back(token, init_token(WORD, str));
 }

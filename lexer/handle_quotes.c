@@ -13,14 +13,14 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-char	*collect_string(t_lexer *lexer)
+char	*collect_string(t_lexer *lexer, char c)
 {
 	char	*s;
 	char	*str;
 
 	s = NULL;
 	str = NULL;
-	while (lexer->c != '\'')
+	while (lexer->c != c)
 	{
 		s = get_char_as_string(lexer->c);
 		str = ft_strjoin(str, s);
@@ -31,7 +31,7 @@ char	*collect_string(t_lexer *lexer)
 	return (str);
 }
 
-char	*collect_string_check_dollar(t_lexer *lexer, t_token **token, int *flag)
+char	*collect_string_check_dollar(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 	char	*s1;
@@ -43,7 +43,7 @@ char	*collect_string_check_dollar(t_lexer *lexer, t_token **token, int *flag)
 	while (lexer->c != '"' && lexer->c != '\0')
 	{
 		if (lexer->c == '$')
-			s = expand_dollar(lexer, token, flag);
+			s = dollar(lexer, token, &str, 1);
 		else
 		{
 			s = get_char_as_string(lexer->c);
@@ -60,37 +60,37 @@ char	*collect_string_check_dollar(t_lexer *lexer, t_token **token, int *flag)
 	return (str);
 }
 
-char	*single_quote(t_lexer *lexer)
+char	*single_quote(t_lexer *lexer, char c)
 {
 	char	*str;
 
 	str = NULL;
 	lexer_advance(lexer);
-	if (lexer->c != '\'' )
-		str = collect_string(lexer);
+	if (lexer->c != c )
+		str = collect_string(lexer, c);
 	lexer_advance(lexer);
 	return (str);
 }
 
-char	*double_quote(t_lexer *lexer, t_token **token, int *flag)
+char	*double_quote(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 
 	s = NULL;
 	lexer_advance(lexer);
-	s = collect_string_check_dollar(lexer, token, flag);
+	s = collect_string_check_dollar(lexer, token);
 	lexer_advance(lexer);
 	return (s);
 }
 
-char	*get_str_inside_quotes(t_lexer *lexer, t_token **token, int *flag)
+char	*get_str_inside_quotes(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 
 	s = NULL;
 	if (lexer->c == '"')
-		s = double_quote(lexer, token, flag);
+		s = double_quote(lexer, token);
 	else if (lexer->c == '\'')
-		s = single_quote(lexer);
+		s = single_quote(lexer, '\'');
 	return (s);
 }

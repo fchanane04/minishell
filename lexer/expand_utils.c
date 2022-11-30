@@ -46,14 +46,14 @@ char	*get_string_to_expand(t_lexer *lexer)
 	{
 		s = get_char_as_string(lexer->c);
 		str = ft_strjoin(str, s);
-		free(s);
-		s = NULL;
+		ft_free(&s);
 		lexer_advance(lexer);
 	}
+	
 	return (str);
 }
 
-char	*dollar(t_lexer *lexer, t_token **token, int *flag)
+char	*dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 {
 	char	*s;
 	char	c;
@@ -61,14 +61,8 @@ char	*dollar(t_lexer *lexer, t_token **token, int *flag)
 	s = NULL;
 	c = lexer->line[lexer->i + 1];
 	if (ft_is_digit(c) == 1)
-	{
-		lexer_advance(lexer);
-		lexer_advance(lexer);
-		if (c == '0')
-			return (strdup("minishell"));
-		return (NULL);
-	}
-	else if (lexer->c == '$' && ft_isalnum(c) != 1 && c != '$')
+		return (skip_first_digit(lexer, c));
+	else if (lexer->c == '$' && ft_isalnum(c) != 1 && c != '_' && c != '$')
 	{
 		lexer_advance(lexer);
 		if (lexer->c == '?')
@@ -76,6 +70,10 @@ char	*dollar(t_lexer *lexer, t_token **token, int *flag)
 		return (get_char_as_string('$'));
 	}
 	else if (lexer->c == '$' && red_or_pipe(lexer->line[lexer->i + 1]) != 1)
-		return (expand_dollar(lexer, token, flag));
+	{
+		if (check_dollar(lexer) % 2 == 0)
+			return (whithout_expand(lexer));
+		return (expand_dollar(lexer, token, string, flag));
+	}
 	return (NULL);
 }

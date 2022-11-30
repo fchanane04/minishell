@@ -18,6 +18,9 @@ SRC = \
 		lexer/split_expand.c\
 		lexer/ft_split.c\
 		lexer/check_quotes.c\
+		lexer/token_utils.c\
+		lexer/ambiguous_red.c\
+		lexer/join.c\
 		main.c\
 		parser/syntax_error.c\
 		parser/print.c\

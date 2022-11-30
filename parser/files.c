@@ -13,19 +13,6 @@
 #include "../lexer/lexer.h"
 #include "../minishell.h"
 
-int	file_type(int type)
-{
-	if (type == R_RED)
-		return (OUT);
-	else if (type == L_RED)
-		return (IN);
-	else if (type == APP)
-		return (AP);
-	else if (type == DEL)
-		return (HEREDOC);
-	return (0);
-}
-
 t_files	*init_file(t_token *tab, int type)
 {
 	t_files	*file;
@@ -33,7 +20,7 @@ t_files	*init_file(t_token *tab, int type)
 	file = malloc(sizeof(t_files));
 	if (!file)
 		return (NULL);
-	file->type = file_type(type);
+	file->type = type;
 	file->filename = strdup(tab->value);
 	file->next = NULL;
 	return (file);
@@ -68,6 +55,8 @@ t_files	*fill_files(t_token *tab)
 		if (type == R_RED || type == L_RED || type == APP || type == DEL)
 		{
 			tmp = tmp->next;
+			if (tmp->type == AMB)
+				type = AMB;
 			add_file_back(&files, init_file(tmp, type));
 		}
 		tmp = tmp->next;

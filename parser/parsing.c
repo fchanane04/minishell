@@ -13,7 +13,7 @@
 #include "../lexer/lexer.h"
 #include "../minishell.h"
 
-void	fill_args_herdoc(t_token *tab, t_parser *cmd_table, int *index)
+void	fill_args(t_token *tab, t_parser *cmd_table, int *index)
 {
 	int		type;
 	t_token	*tmp;
@@ -56,7 +56,7 @@ t_parser	*init_cmd_table(t_token *tab)
 		exit(EXIT_FAILURE);
 	size = get_size_of_words(tab);
 	cmd_table->args = ft_allocate(size);
-	fill_args_herdoc(tab, cmd_table, &index);
+	fill_args(tab, cmd_table, &index);
 	cmd_table->files = fill_files(tab);
 	assign_null(cmd_table, &index);
 	return (cmd_table);

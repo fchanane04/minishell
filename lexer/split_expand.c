@@ -46,19 +46,31 @@ int	count_word(char **s)
 	return (i);
 }
 
-char	*handle_spaces(char *expand, t_token **token, int *flag)
+int	get_type(t_token *token)
+{
+	if (is_redirection(token) == 1)
+		return (AMB);
+	return (WORD);
+}
+
+char	*handle_spaces(char *expand, t_token **token)
 {
 	char	**a;
 	int		count;
 	int		i;
+	char	*s;
+	int		type;
 
 	i = 0;
-	a = ft_split(expand, ' ');
+	a = ft_split(expand, ' ');//handle tab
 	count = count_word(a);
+	type = get_type(*token);
 	while (i < count - 1)
 	{
-		add_token_back(token, init_token(WORD, a[i], flag, 1));
+		add_token_back(token, init_token(type, a[i]));
 		i++;
 	}
-	return (a[i]);
+	s = ft_strdup_free(&a[i]);
+	free(a);
+	return (s);
 }

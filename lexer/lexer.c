@@ -31,7 +31,7 @@ char	*get_str(t_lexer *lexer)
 	return (str);
 }
 
-void	add_app(t_lexer *lexer, t_token **token, char *str, int *flag)
+void	add_app(t_lexer *lexer, t_token **token, char *str)
 {
 	char	*s;
 
@@ -41,36 +41,36 @@ void	add_app(t_lexer *lexer, t_token **token, char *str, int *flag)
 	if (lexer->c == '>')
 	{
 		s = strdup(">>");
-		add_token_back(token, init_token(APP, s, flag, -1));
+		add_token_back(token, init_token(APP, s));
 	}
 	lexer_advance(lexer);
 }
 
-void	add_red_and_pipe(t_lexer *lexer, t_token **token, int *flag)
+void	add_red_and_pipe(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 
 	s = NULL;
 	s = get_char_as_string(lexer->c);
 	if (lexer->c == '>' && lexer->line[lexer->i + 1] != '>')
-		add_token_back(token, init_token(R_RED, s, flag, -1));
+		add_token_back(token, init_token(R_RED, s));
 	else if (lexer->c == '<' && lexer->line[lexer->i + 1] != '<')
-		add_token_back(token, init_token(L_RED, s, flag, -1));
+		add_token_back(token, init_token(L_RED, s));
 	else if (lexer->c == '>' && lexer->line[lexer->i + 1] == '>')
-		add_app(lexer, token, s, flag);
+		add_app(lexer, token, s);
 	else if (lexer->c == '<' && lexer->line[lexer->i + 1] == '<')
 	{
-		add_herdoc(lexer, token, flag);
+		add_herdoc(lexer, token);
 		free(s);
 		s = NULL;
 		return ;
 	}
 	else if (lexer->c == '|')
-		add_token_back(token, init_token(PIPE, s, flag, -1));
+		add_token_back(token, init_token(PIPE, s));
 	lexer_advance(lexer);
 }
 
-void	add_word(t_lexer *lexer, t_token **token, int *flag)
+void	add_word(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 	char	*str;
@@ -82,45 +82,36 @@ void	add_word(t_lexer *lexer, t_token **token, int *flag)
 	{
 		if (is_quote(lexer->c) == 0)
 		{
-			s = get_str_inside_quotes(lexer, token, flag);
+			s = get_str_inside_quotes(lexer, token);
 			if (s == NULL && (is_space(lexer->c) == 0 || lexer->c == '\0'))
 			{
 				s = get_char_as_string('\0');
-				add_token_back(token, init_token(WORD, s, flag, -1));
+				str = ft_strjoin(str, s);
+				ft_free(&s);
 				continue ;
 			}
 		}
-		else if (lexer->c == '$' && (is_quote(lexer->line[lexer->i + 1]) == 0))
-			lexer_advance(lexer);
-		else if (lexer->c == '$')
-			s = dollar(lexer, token, flag);
 		else
-			s = get_str(lexer);
+			expand_or_string(lexer, token, &str, &s);
 		if (s != NULL)
-		{
-			str = ft_strjoin(str, s);
-			free(s);
-			s = NULL;
-		}
+			str = join_and_free(str, &s);
 	}
 	if (str != NULL)
-		add_token_back(token, init_token(WORD, str, flag, -1));
+		add_token_back(token, init_token(WORD, str));
 }
 
 t_token	*get_token(t_lexer *lexer)
 {
-	int		flag;
 	t_token	*token;
 
 	token = NULL;
-	flag = 0;
 	while (lexer->c != '\0')
 	{
 		ft_skip_whitespaces(lexer);
 		if (red_or_pipe(lexer->c) == 1)
-			add_red_and_pipe(lexer, &token, &flag);
+			add_red_and_pipe(lexer, &token);
 		else if (red_or_pipe(lexer->c) != 1)
-			add_word(lexer, &token, &flag);
+			add_word(lexer, &token);
 	}
 	return (token);
 }

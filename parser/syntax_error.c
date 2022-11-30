@@ -13,7 +13,7 @@
 #include "../lexer/lexer.h"
 #include "../minishell.h"
 
-void	join(char *a, char *s1, char *s2)
+void	join(char **a, char *s1, char *s2)
 {
 	int	i;
 	int	j;
@@ -22,28 +22,23 @@ void	join(char *a, char *s1, char *s2)
 	j = 0;
 	while (s1[i])
 	{
-		a[i] = s1[i];
+		*a[i] = s1[i];
 		i++;
 	}
 	while (s2[j])
 	{
-		a[i] = s2[j];
+		*a[i] = s2[j];
 		i++;
 		j++;
 	}
-	a[i] = '\0';
+	*a[i] = '\0';
 	free(s1);
 	s1 = NULL;
 }
 
 int	error_pipe(t_token *token)
 {
-	if (token->index == 0)
-	{
-		printf("bash: %s%s\'\n", ERROR_MSG, token->value);
-		return (-1);
-	}
-	else if (token->next == NULL)
+	if (token->next == NULL)
 	{
 		printf("bash: %s%s\'\n", ERROR_MSG, "newline");
 		return (-1);
@@ -79,6 +74,11 @@ int	syntax(t_token *token)
 {
 	int	type;
 
+	if (token != NULL && token->type == PIPE)
+	{
+		printf("bash: %s%s\'\n", ERROR_MSG, token->value);
+		return (-1);
+	}
 	while (token != NULL)
 	{
 		type = token->type;

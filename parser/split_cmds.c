@@ -39,7 +39,6 @@ t_token	*init_tab(int type, char *s)
 	if (!token)
 		exit(EXIT_FAILURE);
 	token->type = type;
-	token->index = 0;
 	if (s != NULL)
 		token->value = strdup(s);
 	else

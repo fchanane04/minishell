@@ -92,5 +92,6 @@ char	**ft_split(char *s, char c)
 		return (0);
 	words = ft_count((char *)s, c);
 	a = ft_loop((char *)s, c, words);
+	free(s);
 	return (a);
 }

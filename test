@@ -1,0 +1,6 @@
+echo $$$\av ==> segfault
+"$$$hello" ==> segfault////
+echo <$HOME$""==> false output
+add $ to ambiguous redirection
+convert tab to space in expand
+echo >"$a"

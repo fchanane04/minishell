@@ -30,18 +30,10 @@ typedef struct  s_parser t_parser;
 
 typedef struct s_file t_files;
 
-enum file_type{
-	OUT,
-	IN,
-	AP,
-	AMB,
-	HEREDOC,
-};
-
 struct s_file
 {
 	char			*filename;
-	enum file_type	type;
+	enum e_type		type;
 	int				flag;
 	t_files			*next;
 };
@@ -91,8 +83,10 @@ int			get_size_of_words(t_token *tab);
 int			get_size_of_files(t_token *tab, int type);
 void		assign_null(t_parser *cmd_table, int *index);
 void		add_and_free_line(char *line);
-void		join(char *a, char *s1, char *s2);
 t_files		*fill_files(t_token *tab);
+int			is_redirection(t_token *token);
+int			check_dollar(t_lexer *lexer);
+char		*whithout_expand(t_lexer *lexer);
 
 //*******************************************************************
 
