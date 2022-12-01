@@ -17,6 +17,25 @@ void	free_all_struct(t_token *token, t_token **tab, t_parser *cmd_table)
 	ft_free_cmd_table(cmd_table);
 }
 
+char	*ft_strdup_and_free(char *str)
+{
+	char	*new;
+	int		i;
+
+	i = 0;
+	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!new)
+		return (NULL);
+	while (str[i] != '\0')
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[i] = '\0';
+	free(str);
+	return (new);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	char		*line;
@@ -78,7 +97,7 @@ int	main(int ac, char **av, char **envp)
 			}
 			free_lexer(lexer);
 			add_and_free_line(line);
-			system("leaks minishell");
+			// system("leaks minishell");
 		}
 	}
 }

@@ -100,7 +100,7 @@ char	*ft_strdup_free(char **s);
 char	*get_str(t_lexer *lexer);
 void	expand_or_string(t_lexer *lexer, t_token **token, char **str, char **s);
 char	*join_and_free(char *str, char **s);
-char	*skip_first_digit(t_lexer *lexer, char c);
+char	*skip_first_digit(t_lexer *lexer);
 int		get_type(t_token *token);
 char	*join_filename(char **string, char *dollar, char *str);
 void	free_all(char *s, char *str, char *string, t_data *data);
@@ -116,5 +116,6 @@ t_data	*allocate(void);
 char	*get_quotes(char c);
 char	*creat_new_string(char *s1, char *s2);
 char	*get_string_without_expand(t_lexer *lexer, char **s);
+int		ft_is_digit(char c);
 
 #endif

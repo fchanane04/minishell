@@ -83,9 +83,18 @@ char	*get_join(t_data *data)
 char	*expand_dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 {
 	t_data	*data;
+	char	*join;
 
+	join = NULL;
 	data = allocate();
 	data->dollar = get_dollar(check_dollar(lexer) - 1, lexer);
+	if (ft_is_digit(lexer->line[lexer->i + 1]))
+	{
+		skip_first_digit(lexer);
+		join = ft_strdup_and_free(data->dollar);
+		free(data);
+		return (join);
+	}
 	lexer_advance(lexer);
 	if (special_characters(lexer->c) == 1)
 		return (join_string_with_char(data->dollar, '$', data));
@@ -97,8 +106,10 @@ char	*expand_dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 		return (add_ambiguous(token, join_with_dollar(data->str), data));
 	if (data->expand != NULL || data->dollar != NULL)
 		data->join = get_join(data);
-	if (check_space(data->join) == 0 && flag != 1 && *string == NULL)
+	if (check_space(data->join) == 0 && flag != 1)
 		return (add_ambiguous_filename(data, string, lexer, token));
+	if (data->join != NULL)
+		join = ft_strdup_and_free(data->join);
 	free_all(data->str, data->dollar, data->expand, data);
-	return (data->join);
+	return (join);
 }

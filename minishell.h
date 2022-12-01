@@ -87,6 +87,7 @@ t_files		*fill_files(t_token *tab);
 int			is_redirection(t_token *token);
 int			check_dollar(t_lexer *lexer);
 char		*whithout_expand(t_lexer *lexer);
+char		*ft_strdup_and_free(char *str);
 
 //*******************************************************************
 
