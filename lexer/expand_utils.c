@@ -48,8 +48,7 @@ char	*get_string_to_expand(t_lexer *lexer)
 		str = ft_strjoin(str, s);
 		ft_free(&s);
 		lexer_advance(lexer);
-	}
-	
+	}	
 	return (str);
 }
 

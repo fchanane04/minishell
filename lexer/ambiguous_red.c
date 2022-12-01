@@ -13,10 +13,65 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-char	*add_ambiguous(t_token **token, char *str)
+char	*join_filename(char **string, char *dollar, char *str)
 {
-	
+	char	*filename;
+
+	filename = NULL;
+	if (*string != NULL)
+		filename = ft_strdup_free(string);
+	if (dollar != NULL)
+	{
+		filename = ft_strjoin(filename, dollar);
+		free(dollar);
+	}
+	if (str != NULL)
+	{
+		filename = ft_strjoin(filename, str);
+		free(str);
+	}
+	return (filename);
+}
+
+char	*get_ambiguous_filename(char **string, char *dollar,
+			char *str, t_lexer *lexer)
+{
+	char	*filename;
+
+	filename = NULL;
+	filename = join_filename(string, dollar, str);
+	str = NULL;
+	str = join_after_expand(lexer);
+	if (str != NULL)
+	{
+		filename = ft_strjoin(filename, str);
+		free(str);
+	}
+	return (filename);
+}
+
+char	*add_ambiguous_filename(t_data *data, char **string,
+			t_lexer *lexer, t_token **token)
+{
+	char	*filename;
+
+	filename = NULL;
+	if (get_type(*token) == AMB)
+	{
+		data->str = join_with_dollar(data->str);
+		filename = get_ambiguous_filename(string, data->dollar,
+				data->str, lexer);
+		free_all(data->join, data->expand, NULL, NULL);
+		return (add_ambiguous(token, filename, data));
+	}
+	free_all(data->expand, data->str, data->dollar, data);
+	return (handle_spaces(data->join, token));
+}
+
+char	*add_ambiguous(t_token **token, char *str, t_data *data)
+{
 	add_token_back(token, init_token(AMB, str));
+	free(data);
 	return (NULL);
 }
 

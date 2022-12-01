@@ -13,6 +13,24 @@
 #include "lexer.h"
 #include "../minishell.h"
 
+char	*ft_strdup_free(char **s)
+{
+	char	*a;
+	int		i;
+
+	i = 0;
+	a = malloc(sizeof(char) * (ft_strlen(*s) + 1));
+	if (!a)
+		return (NULL);
+	while (s[0][i] != '\0')
+	{
+		a[i] = s[0][i];
+		i++;
+	}
+	ft_free(s);
+	return (a);
+}
+
 int	is_quote(char c)
 {
 	if (c == '"' || c == '\'')

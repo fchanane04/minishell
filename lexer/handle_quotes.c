@@ -66,7 +66,7 @@ char	*single_quote(t_lexer *lexer, char c)
 
 	str = NULL;
 	lexer_advance(lexer);
-	if (lexer->c != c )
+	if (lexer->c != c)
 		str = collect_string(lexer, c);
 	lexer_advance(lexer);
 	return (str);

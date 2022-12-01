@@ -4,3 +4,6 @@ echo <$HOME$""==> false output
 add $ to ambiguous redirection
 convert tab to space in expand
 echo >"$a"
+echo =$=$$$a==== ==>leaks
+
+echo >$a ==>test it whit $a '|' '>' '<' '$'

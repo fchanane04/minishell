@@ -70,7 +70,7 @@ void	add_red_and_pipe(t_lexer *lexer, t_token **token)
 	lexer_advance(lexer);
 }
 
-void	add_word(t_lexer *lexer, t_token **token)
+char	*add_word(t_lexer *lexer, t_token **token)
 {
 	char	*s;
 	char	*str;
@@ -96,22 +96,27 @@ void	add_word(t_lexer *lexer, t_token **token)
 		if (s != NULL)
 			str = join_and_free(str, &s);
 	}
-	if (str != NULL)
-		add_token_back(token, init_token(WORD, str));
+	return (str);
 }
 
 t_token	*get_token(t_lexer *lexer)
 {
 	t_token	*token;
+	char	*str;
 
 	token = NULL;
+	str = NULL;
 	while (lexer->c != '\0')
 	{
 		ft_skip_whitespaces(lexer);
 		if (red_or_pipe(lexer->c) == 1)
 			add_red_and_pipe(lexer, &token);
 		else if (red_or_pipe(lexer->c) != 1)
-			add_word(lexer, &token);
+		{
+			str = add_word(lexer, &token);
+			if (str != NULL)
+				add_token_back(&token, init_token(WORD, str));
+		}
 	}
 	return (token);
 }

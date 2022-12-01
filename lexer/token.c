@@ -13,6 +13,25 @@
 #include "lexer.h"
 #include "../minishell.h"
 
+char	*get_string_without_expand(t_lexer *lexer, char **s)
+{
+	if (lexer->c == '$')
+	{
+		*s = get_char_as_string('$');
+		lexer_advance(lexer);
+	}
+	else if (lexer->c != '$')
+		*s = get_str(lexer);
+	return (*s);
+}
+
+int	is_whitespaces(char c)
+{
+	if (c == ' ' || c == '\t')
+		return (0);
+	return (1);
+}
+
 char	*get_env(char *str)
 {
 	int		i;

@@ -21,6 +21,7 @@ SRC = \
 		lexer/token_utils.c\
 		lexer/ambiguous_red.c\
 		lexer/join.c\
+		lexer/utils_functions.c\
 		main.c\
 		parser/syntax_error.c\
 		parser/print.c\

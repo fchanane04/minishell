@@ -13,13 +13,6 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-int	is_whitespaces(char c)
-{
-	if (c == ' ' || c == '\t')
-		return (0);
-	return (1);
-}
-
 int	check_space(char *expand)
 {
 	int	i;
@@ -53,24 +46,44 @@ int	get_type(t_token *token)
 	return (WORD);
 }
 
+char	*convert_tabs_into_spaces(char *str)
+{
+	char	*new;
+	int		i;
+
+	i = 0;
+	new = malloc(sizeof(char) *(ft_strlen(str) + 1));
+	if (!new)
+		return (NULL);
+	while (str[i] != '\0')
+	{
+		if (str[i] == '\t')
+			str[i] = ' ';
+		new[i] = str[i];
+		i++;
+	}
+	free(str);
+	new[i] = '\0';
+	return (new);
+}
+
 char	*handle_spaces(char *expand, t_token **token)
 {
 	char	**a;
 	int		count;
 	int		i;
-	char	*s;
 	int		type;
 
 	i = 0;
-	a = ft_split(expand, ' ');//handle tab
+	expand = convert_tabs_into_spaces(expand);
+	a = ft_split(expand, ' ');
 	count = count_word(a);
 	type = get_type(*token);
-	while (i < count - 1)
+	while (i < count)
 	{
 		add_token_back(token, init_token(type, a[i]));
 		i++;
 	}
-	s = ft_strdup_free(&a[i]);
 	free(a);
-	return (s);
+	return (NULL);
 }

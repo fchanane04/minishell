@@ -27,14 +27,22 @@ typedef struct s_lexer
 	char	*line;
 }t_lexer;
 
+typedef struct s_data
+{
+	char	*str;
+	char	*expand;
+	char	*dollar;
+	char	*join;
+}t_data;
+
 enum	e_type{
-	R_RED,//0
-	L_RED,//1
-	PIPE,///2
-	WORD,//3
-	DEL,//4
-	APP,//5
-	AMB,//6
+	R_RED,
+	L_RED,
+	PIPE,
+	WORD,
+	DEL,
+	APP,
+	AMB,
 };
 
 typedef struct s_token	t_token;
@@ -66,7 +74,8 @@ t_token	*init_token(int type, char *s);
 char	*single_quote(t_lexer *lexer, char c);
 char	*double_quote(t_lexer *lexer, t_token **token);
 char	*collect_string_check_dollar(t_lexer *lexer, t_token **token);
-char	*expand_dollar(t_lexer *lexer, t_token **token, char **string, int flag);
+char	*expand_dollar(t_lexer *lexer, t_token **token,
+			char **string, int flag);
 int		syntax(t_token *token);
 void	ft_skip_whitespaces(t_lexer *lexer);
 void	lexer_advance(t_lexer *lexer);
@@ -85,14 +94,27 @@ char	*handle_spaces(char *expand, t_token **token);
 char	*get_string_to_expand(t_lexer *lexer);
 void	ft_free(char **s);
 int		is_ambiguous(char *dollar, char *string, char *expand, t_lexer *lexer);
-char	*add_ambiguous(t_token **token, char *str);
-char	*join_string_with_char(char *dollar, char c);
+char	*add_ambiguous(t_token **token, char *str, t_data *data);
+char	*join_string_with_char(char *dollar, char c, t_data *data);
 char	*ft_strdup_free(char **s);
 char	*get_str(t_lexer *lexer);
 void	expand_or_string(t_lexer *lexer, t_token **token, char **str, char **s);
 char	*join_and_free(char *str, char **s);
 char	*skip_first_digit(t_lexer *lexer, char c);
 int		get_type(t_token *token);
-
+char	*join_filename(char **string, char *dollar, char *str);
+void	free_all(char *s, char *str, char *string, t_data *data);
+char	*join_with_dollar(char *str);
+char	*add_ambiguous_filename(t_data *data, char **string,
+			t_lexer *lexer, t_token **token);
+char	*get_ambiguous_filename(char **string, char *dollar,
+			char *str, t_lexer *lexer);
+char	*join_after_expand(t_lexer *lexer);
+char	*get_quotes(char c);
+void	free_all(char *s, char *str, char *string, t_data *data);
+t_data	*allocate(void);
+char	*get_quotes(char c);
+char	*creat_new_string(char *s1, char *s2);
+char	*get_string_without_expand(t_lexer *lexer, char **s);
 
 #endif
