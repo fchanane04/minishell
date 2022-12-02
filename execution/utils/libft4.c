@@ -1,57 +1,66 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   libft4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 05:01:36 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/29 19:37:13 by fchanane         ###   ########.fr       */
+/*   Created: 2022/12/01 17:51:43 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/02 13:18:31 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../minishell.h"
 
-int	lines_counter(char **str)
+int	find_equal(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
-		i++;
-	return (i);
-}
-
-int	printable(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
 	{
-		if (line[i] == '=')
+		if (str[i] == '=')
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
-void	ft_env(t_parser *prog)
+char	*var_name(char *line)
 {
-	t_env	*tmp;
+	int		i;
+	int		j;
+	char	*name;
 
-	prog = NULL;
-	tmp = var->envc;
-	while (tmp)
+	i = 0;
+	while (line[i] && line[i] != '=')
+		i++;
+	if (!line[i])
+		name = ft_strdup(line);
+	else
 	{
-		if (printable(tmp->line))
+		name = malloc(sizeof(char) * (i + 1));
+		j = 0;
+		while (j < i)
 		{
-			ft_putstr_fd(tmp->line, var->fd_out);
-			ft_putstr_fd("\n", var->fd_out);
+			name[j] = line[j];
+			j++;
 		}
-		tmp = tmp->next;
+		name[j] = '\0';
 	}
-	if (var->fd_out > 1)
-		close(var->fd_out);
-	var->status = 0;
+	return (name);
+}
+
+int	ft_strcmp_export(char *s1, char *s2)
+{
+	char	*str1;
+	char	*str2;
+	int		i;
+
+	str1 = var_name(s1);
+	str2 = var_name(s2);
+	i = ft_strcmp(str1, str2);
+	free(str1);
+	free(str2);
+	return (i);
 }

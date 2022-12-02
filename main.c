@@ -17,25 +17,6 @@ void	free_all_struct(t_token *token, t_token **tab, t_parser *cmd_table)
 	ft_free_cmd_table(cmd_table);
 }
 
-char	*ft_strdup_and_free(char *str)
-{
-	char	*new;
-	int		i;
-
-	i = 0;
-	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!new)
-		return (NULL);
-	while (str[i] != '\0')
-	{
-		new[i] = str[i];
-		i++;
-	}
-	new[i] = '\0';
-	free(str);
-	return (new);
-}
-
 int	main(int ac, char **av, char **envp)
 {
 	char		*line;
@@ -61,12 +42,18 @@ int	main(int ac, char **av, char **envp)
 	var->status = 0;
 	var->fd_out = 1;
 	var->fd_in = 0;
-	while ((line = readline("minishell@minihell>$ ")) != NULL)
+	
+	signal(SIGINT, signal_handler);
+	while (1)
 	{
+		var->flag = 0;
+		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, SIG_IGN);
+		line = readline("minishell$> ");
 		if (line == 0x0)
 		{
-			printf("\n");
-			break;
+			printf("exit\n");
+			exit(var->status);
 		}
 		if (strcmp(line, "\0") != 0)
 		{
@@ -92,12 +79,13 @@ int	main(int ac, char **av, char **envp)
 			{
 				tab = get_token_as_cmd(token);
 				cmd_table = parse_cmd(tab);
-				print_struct(cmd_table);
+				ft_execute(cmd_table);
+								//print_struct(cmd_table);
 				free_all_struct(token, tab, cmd_table);
 			}
 			free_lexer(lexer);
 			add_and_free_line(line);
-			// system("leaks minishell");
+			//system("leaks minishell");
 		}
 	}
 }

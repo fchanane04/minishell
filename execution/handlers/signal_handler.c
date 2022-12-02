@@ -1,28 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 04:18:38 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/29 21:51:28 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/29 12:50:18 by fchanane          #+#    #+#             */
+/*   Updated: 2022/11/29 21:42:46 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../minishell.h"
 
-void	ft_pwd(t_parser *prog)
+void	signal_handler(int sig)
 {
-	char	*buff;
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 
-	prog = NULL;
-	buff = getcwd(0, 0);
-	if (!buff)
-		buff = ft_strdup(get_envc(var->envc, "PWD"));
-	write(var->fd_out, buff, ft_strlen(buff));
-	write(var->fd_out, "\n", 1);
-	if (var->fd_out > 1)
-		close(var->fd_out);
-	var->status = 0;
+void	sig_child(int sig)
+{
+	if (sig == SIGQUIT)
+	{
+		printf("Quit %d\n", SIGQUIT);
+		exit(0);
+	}
+}
+
+void	signal_heredoc(int sig)
+{
+	if (sig == SIGINT)
+	{
+		var->status = 1;
+		exit(var->status);
+	}
 }

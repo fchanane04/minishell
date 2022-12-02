@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_single_cmd.c                               :+:      :+:    :+:   */
+/*   exec_single_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/22 17:46:53 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 13:17:07 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/29 05:07:00 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/02 11:03:45 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	**create_paths(t_env *env)
 			break ;
 		tmp = tmp->next;
 	}
-	no_name = ft_split(tmp->line, '=');
-	paths = ft_split(no_name[1], ':');
+	no_name = ft_split_exec(tmp->line, '=');
+	paths = ft_split_exec(no_name[1], ':');
 	free(no_name[0]);
 	free(no_name[1]);
 	free(no_name);
@@ -87,7 +87,6 @@ char	**duplicate(t_env *env)
 	}
 	envv[i] = NULL;
 	return (envv);
-	
 }
 
 void	free_paths(char **paths)
@@ -102,63 +101,50 @@ void	free_paths(char **paths)
 	}
 	free(paths);
 }
-#include <errno.h>
- #include <sys/stat.h>
-void	is_a_directory(char *bin_path)
-{
-	struct stat	data;
 
-	if (stat(bin_path, &data) == -1)
-	{
-		strerror(errno);
-		write(2, "Bash : Command not found\n", sizeof("Bash : Command not found\n"));
-		var->status = 127;
-		printf("erno == %d, var->status == %d\n", errno, var->status);
-		// exit(errno);
-	}
-	if (S_ISDIR(data.st_mode) == 1)
-	{
-		strerror(errno);
-		write(2, "bash : is a directory\n", sizeof("bash : is a directory\n"));
-		exit(errno);
-	}
-}
-
-void	execute_single_cmd(t_parser *prog)
+void	exec_single_cmd(t_parser *prog, char *heredoc)
 {
-	char	*path;
 	int		pid;
+	char	*path;
 	char	**envv;
+	int		status;
 
-	// if (prog->files)
-	// {
-	// 	var->fd_in = open_infile(prog->files);
-	// 	var->fd_out = open_outfile(prog->files);
-	// }
+	if (!prog->args)
+		return ;
+	if (amb_redirect_check(prog) || (file_prep(prog, heredoc) == -1))
+		return ;
 	pid = fork();
 	if (pid == 0)
 	{
 		dup2(var->fd_in, 0);
 		dup2(var->fd_out, 1);
-		path = find_path(create_paths(var->envc), prog->args[0]);
-		is_a_directory(path);
-		
-		/*
-		if (!path)
+		if (var->envc)
 		{
-			//var->status = 127;
-			write(2, "bash :command not found: ", 25);
-			ft_putstr_fd(prog->args[0], 2);
-			write(2, "\n", 2);
-			exit(*exit_status_setter(127));
-		}
-		*/
-		envv = duplicate(var->envc);
-		if (execve(path, prog->args, envv) <= -1)
-		{
-			perror("execve");
-			exit(1);
+			path = find_path(create_paths(var->envc), prog->args[0]);
+			if (!path)
+			{
+				if (prog->args[0][0] == '.' || prog->args[0][0] == '/')
+				{
+					if (isdir(prog->args[0]))
+						directory_error(prog->args[0]);
+					else if (!access(prog->args[0], X_OK))
+						permission_error(prog->args[0]);
+					else
+						not_found_error(prog->args[0]);
+				}
+			}
+			envv = duplicate(var->envc);
+			if (execve(path, prog->args, envv) <= -1)
+			{
+				perror("execve");
+				exit(1);
+			}
 		}
 	}
-	wait(NULL);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		var->status = WEXITSTATUS(status);
+	if (WIFSIGNALED(status))
+		var->status = WTERMSIG(status) + 128;
+	cleanup_fd();
 }

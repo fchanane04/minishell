@@ -73,19 +73,17 @@ char	*handle_spaces(char *expand, t_token **token)
 	int		count;
 	int		i;
 	int		type;
-	char	*s;
 
 	i = 0;
 	expand = convert_tabs_into_spaces(expand);
 	a = ft_split(expand, ' ');
 	count = count_word(a);
 	type = get_type(*token);
-	while (i < count - 1)
+	while (i < count)
 	{
 		add_token_back(token, init_token(type, a[i]));
 		i++;
 	}
-	s = ft_strdup_and_free(a[i]);
 	free(a);
-	return (s);
+	return (NULL);
 }

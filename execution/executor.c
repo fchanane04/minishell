@@ -1,28 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 04:18:38 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/29 21:51:28 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/27 17:42:34 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/02 18:06:39 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../minishell.h"
+#include"../minishell.h"
 
-void	ft_pwd(t_parser *prog)
+void	ft_execute(t_parser *prog)
 {
-	char	*buff;
+	int		typ;
+	int		i;
+	char	**save;
 
-	prog = NULL;
-	buff = getcwd(0, 0);
-	if (!buff)
-		buff = ft_strdup(get_envc(var->envc, "PWD"));
-	write(var->fd_out, buff, ft_strlen(buff));
-	write(var->fd_out, "\n", 1);
-	if (var->fd_out > 1)
-		close(var->fd_out);
-	var->status = 0;
+	if (!prog)
+		return ;
+	i = 0;
+	typ = exec_type_check(prog);
+	save = ft_heredoc(prog);
+	if (!save)
+		return ;
+	if (var->flag == -303)
+		return ;
+	// if (typ == 0)
+	// 	exec_builtin(prog, save[0]);
+	// if (typ == 1)
+	// 	exec_single_cmd(prog, save[0]);
+	// if (typ == 2)
+	// 	exec_multi_cmd(prog, save);
 }

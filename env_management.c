@@ -6,7 +6,7 @@
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/14 22:46:18 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 12:07:28 by fchanane         ###   ########.fr       */
+/*   Updated: 2022/12/01 15:20:36 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_env	*new_node(char *line)
 
 	node = malloc(sizeof(t_env));
 	node->line = ft_strdup(line);
+	node->blacklisted = 0;
 	node->next = NULL;
 	return (node);
 }
@@ -58,16 +59,24 @@ char *get_envc(t_env *env, char *var)
 	t_env	*tmp;
 	int		start;
 	int		len;
+	char	**split;
 
 	tmp = env;
 	while (tmp)
 	{
-		if (!strncmp(var , tmp->line, ft_strlen(var)))
+		split = ft_split_exec(tmp->line, '=');
+		if (!strcmp(var , split[0]))
 		{
+			free(split[0]);
+			free(split[1]);
+			free(split);
 			start = ft_strlen(var) + 1;
 			len = ft_strlen(tmp->line) - start;
 			return (ft_substr(tmp->line, start, len));
 		}
+		free(split[0]);
+		free(split[1]);
+		free(split);
 		tmp = tmp->next;
 	}
 	return (NULL);

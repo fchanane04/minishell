@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/09 23:24:09 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 12:45:39 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/29 05:02:24 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/02 13:30:40 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,81 @@
 
 int	valid_name(char *str)
 {
-	int	i;
+	int		i;
+	char	*name;
 
+	name = var_name(str);
 	i = 0;
-	if (str[i] != '_' && (str[i] < 'A' || str[i] > 'z' || (str[i] < 'Z' && str[i] > 'a')))
-		return (0);
-	i++;
-	while (str[i])
+	if (name[i] != '_' && !ft_isalpha(name[i]))
 	{
-		if (!ft_isalnum(str[i]))
+		free(name);
+		return (0);
+	}
+	i++;
+	while (name[i])
+	{
+		if (name[i] != '_' && !ft_isalnum(name[i]))
+		{
+			free(name);
 			return (0);
+		}
 		i++;
 	}
+	free(name);
 	return (1);
 }
 
-void	unset_error(char *str)
+void	identifier_error(char *str, char *builtin)
 {
-	ft_putstr_fd("bash: unset: `", 1);
+	ft_putstr_fd("bash: ", 1);
+	ft_putstr_fd(builtin, 1);
+	ft_putstr_fd(": `", 1);
 	ft_putstr_fd(str, 1);
 	ft_putstr_fd("\': not a valid identifier\n", 1);
+	var->status = 1;
 }
 
-void	ft_unset(t_parser *prog, t_env **env)
+void	remove_inside(char *arg)
 {
-	int		i;
 	t_env	*tmp;
 	t_env	*freeit;
 
+	tmp = var->envc;
+	while (tmp->next)
+	{
+		if (!ft_strcmp_export(arg, tmp->next->line))
+		{
+			freeit = tmp->next;
+			tmp->next = tmp->next->next;
+			freeit->next = NULL;
+			free(freeit);
+			break ;
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	remove_var(char *arg)
+{
+	t_env	*tmp;
+
+	if (!ft_strcmp_export(arg, var->envc->line))
+	{
+		tmp = var->envc;
+		var->envc = var->envc->next;
+		tmp->next = NULL;
+		free(tmp);
+	}
+	else
+		remove_inside(arg);
+}
+
+void	ft_unset(t_parser *prog)
+{
+	int		i;
+
 	i = 1;
+	var->status = 0;
 	if (!prog->args[i])
 		return ;
 	while (prog->args[i])
@@ -50,37 +96,10 @@ void	ft_unset(t_parser *prog, t_env **env)
 		if (prog->args[i][0] == '#')
 			return ;
 		if (!valid_name(prog->args[i]))
-			unset_error(prog->args[i]);
-		tmp = *env;
-		while (*env && !ft_strncmp(tmp->line, prog->args[i], ft_strlen(prog->args[i])))
-		{
-			*env = tmp->next;
-			tmp = *env;
-		}
+			identifier_error(prog->args[i], "unset");
+		else
+			remove_var(prog->args[i]);
 		i++;
 	}
-	if (tmp)
-	{
-		while (prog->args[i])
-		{
-			tmp = *env;
-			freeit = tmp->next;
-			while (freeit)
-			{
-				if (!ft_strncmp(freeit->line, prog->args[i], ft_strlen(prog->args[i])))
-				{
-					tmp->next = freeit->next;
-					freeit->next = NULL;
-					free(freeit);
-					freeit = tmp->next;
-				}
-				else
-				{
-					tmp = freeit;
-					freeit = freeit->next;
-				}
-			}
-			i++;
-		}
-	}
+	var->status = 0;
 }

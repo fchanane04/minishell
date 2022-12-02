@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/09 22:20:11 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 12:43:37 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/28 18:55:18 by fchanane          #+#    #+#             */
+/*   Updated: 2022/11/29 21:43:59 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	ft_echo(t_parser *prog)
 	while (prog->args[i])
 	{
 		ft_putstr_fd(prog->args[i], var->fd_out);
-		if  (prog->args[i + 1])
-				ft_putstr_fd(" ", var->fd_out);
+		if (prog->args[i + 1])
+			ft_putstr_fd(" ", var->fd_out);
 		i++;
 	}
 	if (endl)

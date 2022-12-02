@@ -13,10 +13,12 @@
 #include "lexer.h"
 #include "../minishell.h"
 
-char	*skip_first_digit(t_lexer *lexer)
+char	*skip_first_digit(t_lexer *lexer, char c)
 {
 	lexer_advance(lexer);
 	lexer_advance(lexer);
+	if (c == '0')
+		return (strdup("minishell"));
 	return (NULL);
 }
 

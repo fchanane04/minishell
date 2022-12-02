@@ -5,27 +5,36 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/09 23:25:57 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 12:43:30 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/28 18:45:57 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/01 15:37:19 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../minishell.h"
 
-void	exec_builtin(t_parser *prog, t_env **env)
+void	exec_builtin(t_parser *prog, char *heredoc)
 {
-	if (!ft_strncmp(prog->args[0], "echo", ft_strlen(prog->args[0])))
+	if (amb_redirect_check(prog) || (file_prep(prog, heredoc) == -1))
+		return ;
+	ft_builtins(prog);
+}
+
+void	ft_builtins(t_parser *prog)
+{
+	if (!ft_strcmp(prog->args[0], "echo") || !ft_strcmp(prog->args[0], "ECHO"))
 		ft_echo(prog);
-	if (!ft_strncmp(prog->args[0], "cd", ft_strlen(prog->args[0])))
-		ft_cd(prog, env);
-	if (!ft_strncmp(prog->args[0], "pwd", ft_strlen(prog->args[0])))
+	if (!ft_strcmp(prog->args[0], "cd") || !ft_strcmp(prog->args[0], "CD"))
+		ft_cd(prog);
+	if (!ft_strcmp(prog->args[0], "pwd") || !ft_strcmp(prog->args[0], "PWD"))
 		ft_pwd(prog);
-	if (!ft_strncmp(prog->args[0], "env", ft_strlen(prog->args[0])))
-		ft_env(prog, env);
-	if (!ft_strncmp(prog->args[0], "unset", ft_strlen(prog->args[0])))
-		ft_unset(prog, env);
-	if (!ft_strncmp(prog->args[0], "export", ft_strlen(prog->args[0])))
-		ft_export(prog, env);
-	if (!ft_strncmp(prog->args[0], "exit", ft_strlen(prog->args[0])))
+	if (!ft_strcmp(prog->args[0], "env") || !ft_strcmp(prog->args[0], "ENV"))
+		ft_env(prog);
+	if (!ft_strcmp(prog->args[0], "unset")
+		|| !ft_strcmp(prog->args[0], "UNSET"))
+		ft_unset(prog);
+	if (!ft_strcmp(prog->args[0], "export")
+		|| !ft_strcmp(prog->args[0], "EXPORT"))
+		ft_export(prog);
+	if (!ft_strcmp(prog->args[0], "exit") || !ft_strcmp(prog->args[0], "EXIT"))
 		ft_exit(prog);
 }

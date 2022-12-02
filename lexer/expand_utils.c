@@ -60,7 +60,7 @@ char	*dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 	s = NULL;
 	c = lexer->line[lexer->i + 1];
 	if (ft_is_digit(c) == 1)
-		return (skip_first_digit(lexer));
+		return (skip_first_digit(lexer, c));
 	else if (lexer->c == '$' && ft_isalnum(c) != 1 && c != '_' && c != '$')
 	{
 		lexer_advance(lexer);

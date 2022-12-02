@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/09 22:23:42 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 12:43:33 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/29 04:15:29 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/02 09:17:09 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	change_pwd(t_env **env, char *pwd, char *type)
 
 	tmp = *env;
 	i = 0;
-	new_line = ft_strjoin(type, "=");
-	new_line = ft_strjoin(new_line, pwd);
+	new_line = ft_strjoin_exec(type, "=");
+	new_line = ft_strjoin_exec(new_line, pwd);
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->line, type, ft_strlen(type)))
@@ -39,12 +39,23 @@ void	cd_error(char *dir)
 	perror("");
 }
 
-void	ft_cd(t_parser	*prog, t_env **env)
+void	var_not_set(void)
+{
+	ft_putstr_fd("bash: cd: HOME not set\n", 2);
+	var->status = 1;
+}
+
+void	ft_cd(t_parser	*prog)
 {
 	int		stat;
+	char	*line;
+	char	*cwd;
 	char	buff[100];
 
-	change_pwd(env, getcwd(buff, sizeof(buff)), "OLDPWD");
+	cwd = getcwd(buff, sizeof(buff));
+	if (!cwd)
+		return ;
+	change_pwd(&var->envc, getcwd(buff, sizeof(buff)), "OLDPWD");
 	if (prog->args[1])
 	{
 		stat = chdir(prog->args[1]);
@@ -52,6 +63,13 @@ void	ft_cd(t_parser	*prog, t_env **env)
 			cd_error(prog->args[1]);
 	}
 	else
-		chdir(get_envc(*env, "HOME"));
-	change_pwd(env, getcwd(buff, sizeof(buff)), "PWD");
+	{
+		line = get_envc(var->envc, "HOME");
+		if (!line)
+			var_not_set();
+		else
+			chdir(get_envc(var->envc, "HOME"));
+	}
+	change_pwd(&var->envc, getcwd(buff, sizeof(buff)), "PWD");
+	var->status = 0;
 }

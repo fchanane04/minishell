@@ -1,28 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   export_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 04:18:38 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/29 21:51:28 by fchanane         ###   ########.fr       */
+/*   Created: 2022/12/02 16:04:25 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/02 16:05:06 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../minishell.h"
 
-void	ft_pwd(t_parser *prog)
+char	*arr_create(char *arg)
 {
-	char	*buff;
+	char	**split;
+	char	*arr;
 
-	prog = NULL;
-	buff = getcwd(0, 0);
-	if (!buff)
-		buff = ft_strdup(get_envc(var->envc, "PWD"));
-	write(var->fd_out, buff, ft_strlen(buff));
-	write(var->fd_out, "\n", 1);
-	if (var->fd_out > 1)
-		close(var->fd_out);
-	var->status = 0;
+	split = ft_split_exec(arg, '+');
+	arr = ft_strdup(split[0]);
+	leaks_hunter(&split);
+	return (arr);
 }

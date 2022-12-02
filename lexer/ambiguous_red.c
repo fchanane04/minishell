@@ -54,10 +54,8 @@ char	*add_ambiguous_filename(t_data *data, char **string,
 			t_lexer *lexer, t_token **token)
 {
 	char	*filename;
-	char	*join;
 
 	filename = NULL;
-	join = NULL;
 	if (get_type(*token) == AMB)
 	{
 		data->str = join_with_dollar(data->str);
@@ -66,15 +64,8 @@ char	*add_ambiguous_filename(t_data *data, char **string,
 		free_all(data->join, data->expand, NULL, NULL);
 		return (add_ambiguous(token, filename, data));
 	}
-	if (*string != NULL)
-		join = ft_strdup_free(string);//---
-	if (data->join != NULL)
-	{
-		join = ft_strjoin(join, data->join);
-		free(data->join);
-	}
 	free_all(data->expand, data->str, data->dollar, data);
-	return (handle_spaces(join, token));
+	return (handle_spaces(data->join, token));
 }
 
 char	*add_ambiguous(t_token **token, char *str, t_data *data)

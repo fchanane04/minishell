@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/14 23:42:38 by fchanane          #+#    #+#             */
-/*   Updated: 2022/11/23 12:43:47 by fchanane         ###   ########.fr       */
+/*   Created: 2022/11/29 05:05:29 by fchanane          #+#    #+#             */
+/*   Updated: 2022/12/01 15:42:04 by fchanane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_limits(char *arg)
 
 int	is_valid_num(char *arg)
 {
-	int			i;
+	int	i;
 
 	i = 0;
 	if (arg[i] == '-' || arg[i] == '+')
@@ -48,33 +48,35 @@ void	exit_error(char *arg, char *error)
 	ft_putstr_fd(error, 1);
 }
 
+void	set_status_with_error(char *arg, char *msg, int stat)
+{
+	var->status = stat;
+	exit_error(arg, msg);
+}
+
 void	ft_exit(t_parser *prog)
 {
-	int	err;
+	int	flag;
 
 	ft_putstr_fd("exit\n", 1);
-	if (!prog->args[1])
-		err = 1;
-	if (prog->args[1] && !prog->args[2])
+	var->status = 0;
+	flag = 1;
+	if (prog->args[1])
 	{
-		if (is_valid_num(prog->args[1]))
+		if (prog->args[1][0] == '0' && prog->args[1][1] == '\0')
+			var->status = prog->args[1][0] - 48;
+		else if (is_valid_num(prog->args[1]))
 		{
-			var->status = (unsigned char)ft_atoi(prog->args[1]);
-			err = 1;
+		var->status = (unsigned char)ft_atoi(prog->args[1]);
+			if (prog->args[2])
+			{
+				set_status_with_error(NULL, EXIT_ERR2, 1);
+				flag = 0;
+			}
 		}
 		else
-		{
-			exit_error(prog->args[1], EXIT_ERR1);
-			var->status = 255;
-			err = 1;
-		}		
+			set_status_with_error(prog->args[1], EXIT_ERR1, 255);
 	}
-	if (prog->args[1] && prog->args[2])
-	{
-		exit_error(NULL, EXIT_ERR2);
-		var->status = 1;
-		err = 0;
-	}
-	if (err)
+	if (flag)
 		exit(var->status);
 }
