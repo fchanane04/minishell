@@ -36,6 +36,9 @@ SRC = \
 		parser/free.c\
 		parser/files.c\
 		env_management.c\
+		free_utils.c\
+		init_variables.c\
+		main_utils.c\
 		execution/executor.c\
 		execution/handlers/checks_handler.c\
 		execution/handlers/heredoc_handler.c\
@@ -60,26 +63,12 @@ SRC = \
 		execution/handlers/memory_handler.c\
 		execution/exec_single_cmd.c\
 		execution/exec_multi_cmd.c\
-		# execution/heredoc.c\
-		# execution/checks.c\
-		# execution/builtins/cd.c\
-		# execution/builtins/echo.c\
-		# execution/builtins/pwd.c\
-		# execution/builtins/env.c\
-		# execution/builtins/unset.c\
-		# execution/builtins/export.c\
-		# execution/builtins/builtins.c\
-		# execution/builtins/exit.c\
-		# execution/memory.c\
-		# execution/files.c\
-		# execution/execute_single_cmd.c\
-		
 
 OBJ = $(SRC:.c=.o)
 
 all : $(NAME)
 
-$(NAME) : $(OBJ)
+$(NAME) : $(OBJ) main.c
 			$(CC) $(CFLAGS) $(OBJ) ./main.c ./execution/handlers/signal_handler.c $(READLINE) -o $(NAME)
 clean :
 		@$(RM) $(OBJ)

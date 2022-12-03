@@ -1,38 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_variables.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nel-brig <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/03 17:35:42 by nel-brig          #+#    #+#             */
-/*   Updated: 2022/12/03 17:35:43 by nel-brig         ###   ########.fr       */
+/*   Created: 2022/12/03 19:23:14 by nel-brig          #+#    #+#             */
+/*   Updated: 2022/12/03 19:23:15 by nel-brig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer/lexer.h"
 #include "minishell.h"
 
-t_global	*var;
-
-int	main(int ac, char **av, char **envp)
+void	init_global_var(char **envp)
 {
-	char		*line;
-	t_lexer		*lexer;
-	t_token		*token;
-	t_parser	*cmd_table;
+	var = malloc(sizeof(t_global));
+	var->envc = clone_env(envp);
+	var->status = 0;
+	var->fd_out = 1;
+	var->fd_in = 0;
+}
 
-	if (ac != 1 || !envp)
-		exit_with_success(av);
-	init_variables(&token, &cmd_table, envp, &line);
-	lexer = NULL;
-	while (1)
-	{
-		line = get_line();
-		if (ft_strcmp(line, "\0") != 0)
-			main_func(line, lexer, token, cmd_table);
-		else
-			free(line);
-
-	}
+void	init_variables(t_token **token, t_parser **cmd_table,
+		char **envp, char **line)
+{
+	*token = NULL;
+	*cmd_table = NULL;
+	*line = NULL;
+	init_global_var(envp);
+	signal(SIGINT, signal_handler);
 }

@@ -11,29 +11,29 @@
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <string.h>
-#include <signal.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "lexer/lexer.h"
+# include <unistd.h>
+# include <stdlib.h>
+# include <limits.h>
+# include <string.h>
+# include <signal.h>
+# include <stdio.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "lexer/lexer.h"
 
-#define ERROR_MSG "syntax error near unexpected token `"
-#define EXIT_ERR1 ": numeric argument required\n"
-#define EXIT_ERR2 "too many arguments\n"
-#define BASH_ERR "bash: "
-#define DIR_ERR ": Is a directory\n"
+# define ERROR_MSG "syntax error near unexpected token `"
+# define EXIT_ERR1 ": numeric argument required\n"
+# define EXIT_ERR2 "too many arguments\n"
+# define BASH_ERR "bash: "
+# define DIR_ERR ": Is a directory\n"
 
-typedef struct  s_parser t_parser;
+typedef struct s_parser	t_parser;
 
-typedef struct s_file t_files;
+typedef struct s_file	t_files;
 
 struct s_file
 {
@@ -45,9 +45,9 @@ struct s_file
 
 struct s_parser
 {
-	char	**args;
-	t_files	*files;
-	t_parser *next;
+	char		**args;
+	t_files		*files;
+	t_parser	*next;
 };
 
 typedef struct s_env
@@ -76,9 +76,9 @@ typedef struct s_heredoc
 	int		fd;
 }	t_heredoc;
 
-extern t_global *var;
+extern t_global	*var;
 
-void		add_token_back(t_token **head,t_token *token);
+void		add_token_back(t_token **head, t_token *token);
 void		quotes(t_token *head);
 int			check_quotes(char *line);
 void		delete_token(t_token **token);
@@ -88,7 +88,7 @@ t_lexer		*init_lexer(char *line);
 void		print_tokens(t_token *token);
 int			get_size_of_tab(t_token *token);
 void		print_struct(t_parser *cmd_table);
-t_parser	*parse_cmd(t_token **tab);
+t_parser	*parse_cmd(t_token *token);
 char		*ft_strjoin(char *s1, char *s2);
 int			ft_strlen(char *s);
 void		free_lexer(t_lexer *lexer);
@@ -107,6 +107,18 @@ char		*whithout_expand(t_lexer *lexer);
 char		*ft_strdup_and_free(char *str);
 char		*handle_status(t_lexer *lexer);
 char		*get_dollar(int size, t_lexer *lexer);
+void		free_all_struct(t_token *token, t_parser *cmd_table);
+void		set_status_and_free(char *line, t_token *token,
+				t_lexer *lexer, int flag);
+void		exit_with_success(char **av);
+void		exit_with_status(void);
+void		init_global_var(char **envp);
+void		init_variables(t_token **token, t_parser **cmd_table,
+				char **envp, char **line);
+void		free_lexer_and_line(t_lexer *lexer, char *line);
+char		*get_line(void);
+void		main_func(char *line, t_lexer *lexer,
+				t_token *token, t_parser *cmd_table);
 
 //*******************************************************************
 
@@ -159,63 +171,62 @@ int			open_outfile(t_files *files);
 int			ft_isalnum(int c);
 int			check_space(char *expand);
 
-void	ft_execute(t_parser *prog);
-int		exec_type_check(t_parser *prog);
-int		list_counter(t_parser *prog);
-char	**ft_heredoc(t_parser *prog);
-char	*ft_strjoin_exec(char *s1, char *s2);
-char	*heredoc_save(int fd, char *name);
-void	write_in_heredoc(t_heredoc *hd, char *filename);
-char	*heredoc_name(int i);
-int		amb_redirect_check(t_parser *prog);
-void	error_printer(char *bef, char *aft, char *filename);
-int		isdir(char *fileName);
-int		infile_handler(char *filename);
-int		outfile_handler(char *filename);
-int		append_handler(char *filename);
-int		file_prep(t_parser *prog, char *heredoc);
-int		re_init_heredoc(char *heredoc, int fd_in, int err);
-void	cleanup_fd(void);
-void	signal_handler(int sig);
-void	signal_heredoc(int sig);
-void	sig_child(int sig);
-int		ft_isalpha(int c);
-void	ft_builtins(t_parser *prog);
-void	exec_multi_cmd(t_parser *prog, char **heredocs);
-char	**ft_split_exec(char *s, char c);
-void	set_status_with_error(char *arg, char *msg, int stat);
-int		all_printed(t_env *envc);
-int		env_counter(t_env *envc);
-char	**export_stock(void);
-void	export_printer(char **stock);
-int		find_equal(char *str);
-int		ft_strcmp_export(char *s1, char *s2);
-char	*var_name(char *line);
-void	print_export(char **stock);
+void		ft_execute(t_parser *prog);
+int			exec_type_check(t_parser *prog);
+int			list_counter(t_parser *prog);
+char		**ft_heredoc(t_parser *prog);
+char		*ft_strjoin_exec(char *s1, char *s2);
+char		*heredoc_save(int fd, char *name);
+void		write_in_heredoc(t_heredoc *hd, char *filename);
+char		*heredoc_name(int i);
+int			amb_redirect_check(t_parser *prog);
+void		error_printer(char *bef, char *aft, char *filename);
+int			isdir(char *fileName);
+int			infile_handler(char *filename);
+int			outfile_handler(char *filename);
+int			append_handler(char *filename);
+int			file_prep(t_parser *prog, char *heredoc);
+int			re_init_heredoc(char *heredoc, int fd_in, int err);
+void		cleanup_fd(void);
+void		signal_handler(int sig);
+void		signal_heredoc(int sig);
+void		sig_child(int sig);
+int			ft_isalpha(int c);
+void		ft_builtins(t_parser *prog);
+void		exec_multi_cmd(t_parser *prog, char **heredocs);
+char		**ft_split_exec(char *s, char c);
+void		set_status_with_error(char *arg, char *msg, int stat);
+int			all_printed(t_env *envc);
+int			env_counter(t_env *envc);
+char		**export_stock(void);
+void		export_printer(char **stock);
+int			find_equal(char *str);
+int			ft_strcmp_export(char *s1, char *s2);
+char		*var_name(char *line);
+void		print_export(char **stock);
 
-int		still_heredoc(t_files *file);
-void	fd_closer(void);
-int		open_and_write(char *filename, char *name);
-int		check_other_heredoc(t_files *file);
-char	*save_in(char *name);
-void	var_not_set(void);
-void	export_var(char *arg);
-void	add_to_end(char *arg);
-void	add_or_update(char *arg);
-int		last_check(char *arg);
-void	add_without_plus(char *arg);
-void	directory_error(char *arg);
-void	permission_error(char *arg);
-void	not_found_error(char *arg);
-int		valid_name_exp(char *str);
-void	remove_inside(char *arg);
-char	*arr_create(char *arg);
-
-//*******************************************************************
-
-void	print_line_expanded(char *line, int fd);
+int			still_heredoc(t_files *file);
+void		fd_closer(void);
+int			open_and_write(char *filename, char *name);
+int			check_other_heredoc(t_files *file);
+char		*save_in(char *name);
+void		var_not_set(void);
+void		export_var(char *arg);
+void		add_to_end(char *arg);
+void		add_or_update(char *arg);
+int			last_check(char *arg);
+void		add_without_plus(char *arg);
+void		directory_error(char *arg);
+void		permission_error(char *arg);
+void		not_found_error(char *arg);
+int			valid_name_exp(char *str);
+void		remove_inside(char *arg);
+char		*arr_create(char *arg);
 
 //*******************************************************************
 
+void		print_line_expanded(char *line, int fd);
+
+//*******************************************************************
 
 #endif

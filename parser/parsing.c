@@ -78,19 +78,22 @@ void	add_cmd_back(t_parser **cmd_table, t_parser *new)
 	tmp->next = new;
 }
 
-t_parser	*parse_cmd(t_token **tab)
+t_parser	*parse_cmd(t_token *token)
 {
 	t_parser	*cmd_table;
+	t_token		**tab;
 	int			i;
 	int			j;
 
 	i = 0;
 	j = 0;
 	cmd_table = NULL;
+	tab = get_token_as_cmd(token);
 	while (tab[i] != NULL)
 	{
 		add_cmd_back(&cmd_table, init_cmd_table(tab[i]));
 		i++;
 	}
+	ft_free_tab(tab);
 	return (cmd_table);
 }
