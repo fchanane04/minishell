@@ -42,6 +42,7 @@ int	check_other_heredoc(t_files *file)
 	return (0);
 }
 
+
 int	open_and_write(char *filename, char *name)
 {
 	int	fd;
@@ -62,7 +63,7 @@ int	open_and_write(char *filename, char *name)
 				exit(1);
 			if (!ft_strcmp(line, filename))
 				exit(1);
-			write(fd, line, ft_strlen(line));
+			print_line_expanded(line, fd);//expand here
 			write(fd, "\n", 1);
 		}
 	}
@@ -120,9 +121,10 @@ char	**ft_heredoc(t_parser *prog)
 			}
 			file = file->next;
 		}
-		printf("%d\n", check);
 		if (check)
 			save[i] = save_in(name);
+		else
+			save[i] = ft_strdup("NO");
 		tmp = tmp->next;
 		check = 0;
 		i++;

@@ -48,19 +48,17 @@ char	*get_string_to_expand(t_lexer *lexer)
 		str = ft_strjoin(str, s);
 		ft_free(&s);
 		lexer_advance(lexer);
-	}	
+	}
 	return (str);
 }
 
 char	*dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 {
-	char	*s;
 	char	c;
 
-	s = NULL;
 	c = lexer->line[lexer->i + 1];
 	if (ft_is_digit(c) == 1)
-		return (skip_first_digit(lexer, c));
+		return (skip_first_digit(lexer));
 	else if (lexer->c == '$' && ft_isalnum(c) != 1 && c != '_' && c != '$')
 	{
 		lexer_advance(lexer);

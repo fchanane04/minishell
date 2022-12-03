@@ -64,6 +64,7 @@ typedef struct s_global
 	int		fd_out;
 	int		status;
 	int		flag;
+	int		expand;
 }	t_global;
 
 typedef struct s_heredoc
@@ -103,6 +104,9 @@ t_files		*fill_files(t_token *tab);
 int			is_redirection(t_token *token);
 int			check_dollar(t_lexer *lexer);
 char		*whithout_expand(t_lexer *lexer);
+char		*ft_strdup_and_free(char *str);
+char		*handle_status(t_lexer *lexer);
+char		*get_dollar(int size, t_lexer *lexer);
 
 //*******************************************************************
 
@@ -165,46 +169,53 @@ void	write_in_heredoc(t_heredoc *hd, char *filename);
 char	*heredoc_name(int i);
 int		amb_redirect_check(t_parser *prog);
 void	error_printer(char *bef, char *aft, char *filename);
-int	isdir(char *fileName);
-int	infile_handler(char *filename);
-int	outfile_handler(char *filename);
-int	append_handler(char *filename);
-int	file_prep(t_parser *prog, char *heredoc);
-int	re_init_heredoc(char *heredoc, int fd_in, int err);
+int		isdir(char *fileName);
+int		infile_handler(char *filename);
+int		outfile_handler(char *filename);
+int		append_handler(char *filename);
+int		file_prep(t_parser *prog, char *heredoc);
+int		re_init_heredoc(char *heredoc, int fd_in, int err);
 void	cleanup_fd(void);
 void	signal_handler(int sig);
 void	signal_heredoc(int sig);
 void	sig_child(int sig);
-int	ft_isalpha(int c);
+int		ft_isalpha(int c);
 void	ft_builtins(t_parser *prog);
 void	exec_multi_cmd(t_parser *prog, char **heredocs);
 char	**ft_split_exec(char *s, char c);
 void	set_status_with_error(char *arg, char *msg, int stat);
-int	all_printed(t_env *envc);
-int	env_counter(t_env *envc);
+int		all_printed(t_env *envc);
+int		env_counter(t_env *envc);
 char	**export_stock(void);
 void	export_printer(char **stock);
-int	find_equal(char *str);
-int	ft_strcmp_export(char *s1, char *s2);
+int		find_equal(char *str);
+int		ft_strcmp_export(char *s1, char *s2);
 char	*var_name(char *line);
 void	print_export(char **stock);
 
-int	still_heredoc(t_files *file);
+int		still_heredoc(t_files *file);
 void	fd_closer(void);
-int	open_and_write(char *filename, char *name);
-int	check_other_heredoc(t_files *file);
+int		open_and_write(char *filename, char *name);
+int		check_other_heredoc(t_files *file);
 char	*save_in(char *name);
 void	var_not_set(void);
 void	export_var(char *arg);
 void	add_to_end(char *arg);
 void	add_or_update(char *arg);
-int	last_check(char *arg);
+int		last_check(char *arg);
 void	add_without_plus(char *arg);
 void	directory_error(char *arg);
 void	permission_error(char *arg);
 void	not_found_error(char *arg);
-int	valid_name_exp(char *str);
+int		valid_name_exp(char *str);
 void	remove_inside(char *arg);
 char	*arr_create(char *arg);
+
+//*******************************************************************
+
+void	print_line_expanded(char *line, int fd);
+
+//*******************************************************************
+
 
 #endif

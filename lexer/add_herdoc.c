@@ -59,7 +59,7 @@ void	add_herdoc_as_token(t_token **token)
 	char	*s;
 
 	s = NULL;
-	s = strdup("<<");
+	s = ft_strdup("<<");
 	add_token_back(token, init_token(DEL, s));
 }
 

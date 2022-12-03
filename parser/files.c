@@ -21,7 +21,7 @@ t_files	*init_file(t_token *tab, int type)
 	if (!file)
 		return (NULL);
 	file->type = type;
-	file->filename = strdup(tab->value);
+	file->filename = ft_strdup(tab->value);
 	file->next = NULL;
 	return (file);
 }

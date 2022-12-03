@@ -20,7 +20,7 @@ t_lexer	*init_lexer(char *line)
 	lexer = malloc(sizeof(t_lexer));
 	if (!lexer)
 		exit(EXIT_FAILURE);
-	lexer->line = strdup(line);
+	lexer->line = ft_strdup(line);
 	lexer->i = 0;
 	lexer->c = lexer->line[lexer->i];
 	return (lexer);

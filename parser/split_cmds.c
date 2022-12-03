@@ -40,7 +40,7 @@ t_token	*init_tab(int type, char *s)
 		exit(EXIT_FAILURE);
 	token->type = type;
 	if (s != NULL)
-		token->value = strdup(s);
+		token->value = ft_strdup(s);
 	else
 		token->value = NULL;
 	token->next = NULL;

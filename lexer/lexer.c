@@ -40,7 +40,7 @@ void	add_app(t_lexer *lexer, t_token **token, char *str)
 	str = NULL;
 	if (lexer->c == '>')
 	{
-		s = strdup(">>");
+		s = ft_strdup(">>");
 		add_token_back(token, init_token(APP, s));
 	}
 	lexer_advance(lexer);

@@ -1,6 +1,6 @@
 NAME = minishell
 
-USER = fchanane
+USER = nel-brig
 
 CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g3
 
@@ -26,6 +26,7 @@ SRC = \
 		lexer/ambiguous_red.c\
 		lexer/join.c\
 		lexer/utils_functions.c\
+		lexer/ambiguous_utils.c\
 		parser/syntax_error.c\
 		parser/print.c\
 		parser/split_cmds.c\
@@ -39,6 +40,7 @@ SRC = \
 		execution/handlers/checks_handler.c\
 		execution/handlers/heredoc_handler.c\
 		execution/handlers/files_handler.c\
+		execution/handlers/expand_heredoc_handler.c\
 		execution/utils/libft1.c\
 		execution/utils/libft2.c\
 		execution/utils/libft3.c\

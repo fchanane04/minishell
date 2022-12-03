@@ -16,17 +16,28 @@
 int	check_space(char *expand)
 {
 	int	i;
+	int	word;
+	int	space;
 
 	i = 0;
+	word = 0;
+	space = 0;
 	if (expand == NULL)
 		return (1);
 	while (expand[i] != '\0')
 	{
-		if (is_whitespaces(expand[i]) == 0)
-			return (0);
-		i++;
+		while (is_whitespaces(expand[i]) == 0 && expand[i] != '\0')
+			i++;
+		if (is_whitespaces (expand[i]) != 0 && expand [i] != '\0')
+		{
+			while (is_whitespaces(expand[i]) != 0 && expand[i] != '\0')
+				i++;
+			word++;
+		}
+		while (is_whitespaces(expand[i]) == 0 && expand[i] != '\0')
+			i++;
 	}
-	return (1);
+	return (word);
 }
 
 int	count_word(char **s)
@@ -72,18 +83,22 @@ char	*handle_spaces(char *expand, t_token **token)
 	char	**a;
 	int		count;
 	int		i;
-	int		type;
+	char	*s;
 
 	i = 0;
+	s = NULL;
 	expand = convert_tabs_into_spaces(expand);
 	a = ft_split(expand, ' ');
 	count = count_word(a);
-	type = get_type(*token);
-	while (i < count)
+	while (i < count - 1)
 	{
-		add_token_back(token, init_token(type, a[i]));
+		add_token_back(token, init_token(WORD, a[i]));
 		i++;
 	}
-	free(a);
-	return (NULL);
+	if (count != 0)
+	{
+		s = ft_strdup_and_free(a[i]);
+		free(a);
+	}
+	return (s);
 }

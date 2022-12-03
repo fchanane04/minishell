@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_functions.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nel-brig <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 07:07:35 by nel-brig          #+#    #+#             */
-/*   Updated: 2022/12/01 18:49:13 by fchanane         ###   ########.fr       */
+/*   Updated: 2022/12/01 07:07:36 by nel-brig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*creat_new_string(char *s1, char *s2)
 	i = 0;
 	j = 0;
 	if (s1 == NULL && s2 != NULL)
-		return (strdup(s2));
+		return (ft_strdup(s2));
 	else if (s1 == NULL)
 		return (NULL);
 	a = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);

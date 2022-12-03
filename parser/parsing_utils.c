@@ -51,7 +51,7 @@ int	get_size_of_words(t_token *tab)
 void	init_args(t_token *tab, char **s, int *i)
 {
 	if (tab->value != NULL)
-		s[*i] = strdup(tab->value);
+		s[*i] = ft_strdup(tab->value);
 	else
 		s[*i] = NULL;
 	*i += 1;

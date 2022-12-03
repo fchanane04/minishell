@@ -29,8 +29,8 @@ void	ft_execute(t_parser *prog)
 		return ;
 	// if (typ == 0)
 	// 	exec_builtin(prog, save[0]);
-	// if (typ == 1)
-	// 	exec_single_cmd(prog, save[0]);
+	if (typ == 1)
+		exec_single_cmd(prog, save[0]);
 	// if (typ == 2)
 	// 	exec_multi_cmd(prog, save);
 }

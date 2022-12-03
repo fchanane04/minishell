@@ -45,10 +45,10 @@ char	*get_env(char *str)
 	tmp = var->envc;
 	while (tmp != NULL)
 	{
-		if (strncmp(tmp->line, str, ft_strlen(str)) == 0
+		if (ft_strncmp(tmp->line, str, ft_strlen(str)) == 0
 			&& tmp->line[ft_strlen(str)] == '=')
 		{
-			s = strdup(tmp->line + ft_strlen(str) + 1);
+			s = ft_strdup(tmp->line + ft_strlen(str) + 1);
 			return (s);
 		}
 		tmp = tmp->next;
@@ -65,7 +65,7 @@ t_token	*init_token(int type, char *s)
 		exit(EXIT_FAILURE);
 	token->type = type;
 	if (s != NULL)
-		token->value = strdup(s);
+		token->value = ft_strdup(s);
 	else
 		token->value = NULL;
 	token->next = NULL;

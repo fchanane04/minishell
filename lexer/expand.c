@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fchanane <fchanane@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nel-brig <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 16:31:42 by nel-brig          #+#    #+#             */
-/*   Updated: 2022/12/01 18:50:13 by fchanane         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:31:46 by nel-brig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,25 +68,16 @@ char	*whithout_expand(t_lexer *lexer)
 	return (str);
 }
 
-char	*get_join(t_data *data)
-{
-	char	*join;
-
-	join = NULL;
-	if (data->expand == NULL && data->dollar != NULL)
-		join = strdup(data->dollar);
-	else
-		join = creat_new_string(data->dollar, data->expand);
-	return (join);
-}
-
 char	*expand_dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 {
 	t_data	*data;
-	char	*ret;
+	char	*join;
 
+	join = NULL;
 	data = allocate();
 	data->dollar = get_dollar(check_dollar(lexer) - 1, lexer);
+	if (ft_is_digit(lexer->line[lexer->i + 1]))
+		return (digit_case(lexer, data));
 	lexer_advance(lexer);
 	if (special_characters(lexer->c) == 1)
 		return (join_string_with_char(data->dollar, '$', data));
@@ -98,9 +89,10 @@ char	*expand_dollar(t_lexer *lexer, t_token **token, char **string, int flag)
 		return (add_ambiguous(token, join_with_dollar(data->str), data));
 	if (data->expand != NULL || data->dollar != NULL)
 		data->join = get_join(data);
-	if (check_space(data->join) == 0 && flag != 1 && *string == NULL)
+	if (check_space(data->join) == 0 && get_type(*token) == AMB && flag != 1)
+		return (add_ambiguous(token, join_with_dollar(data->str), data));
+	if (check_space(data->join) > 1 && flag != 1)
 		return (add_ambiguous_filename(data, string, lexer, token));
-	ret = ft_strdup(data->join);
-	free_all(data->str, data->dollar, data->expand, data);
-	return (ret);
+	join = get_join_and_free(data);
+	return (join);
 }
